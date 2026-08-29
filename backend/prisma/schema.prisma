@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String
+  email         String    @unique
+  phone         String?
+  password_hash String
+  role          String    @default("CUSTOMER") // CUSTOMER, BUSINESS_OWNER, STAFF, ADMIN
+  status        String    @default("ACTIVE")
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  businesses    Business[]
+  bookings      Booking[]
+  payments      Payment[]
+  reviews       Review[]
+  favorites     Favorite[]
+  staff_profiles Staff[]
+  orders        Order[]
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?
+  image       String?
+  status      String    @default("ACTIVE")
+
+  businesses  Business[]
+}
+
+model Business {
+  id           Int       @id @default(autoincrement())
+  owner_id     Int
+  owner        User      @relation(fields: [owner_id], references: [id])
+  category_id  Int
+  category     Category  @relation(fields: [category_id], references: [id])
+  name         String
+  description  String?
+  phone        String?
+  email        String?
+  address      String?
+  location_lat Float?
+  location_lng Float?
+  logo         String?
+  cover_image  String?
+  status       String    @default("PENDING")
+  rating       Float     @default(0)
+  review_count Int       @default(0)
+  created_at   DateTime  @default(now())
+
+  services     Service[]
+  bookings     Booking[]
+  reviews      Review[]
+  favorites    Favorite[]
+  staff        Staff[]
+  hours        BusinessHours[]
+  products     Product[]
+  orders       Order[]
+
+  @@index([category_id])
+  @@index([location_lat, location_lng])
+}
+
+model Service {
+  id          Int       @id @default(autoincrement())
+  business_id Int
+  business    Business  @relation(fields: [business_id], references: [id])
+  name        String
+  description String?
+  price       Float
+  duration    Int       // duration in minutes
+  status      String    @default("ACTIVE")
+  created_at  DateTime  @default(now())
+
+  bookings    Booking[]
+}
+
+model Booking {
+  id             Int       @id @default(autoincrement())
+  customer_id    Int
+  customer       User      @relation(fields: [customer_id], references: [id])
+  business_id    Int
+  business       Business  @relation(fields: [business_id], references: [id])
+  service_id     Int
+  service        Service   @relation(fields: [service_id], references: [id])
+  staff_id       Int?
+  staff          Staff?    @relation(fields: [staff_id], references: [id])
+  start_time     DateTime
+  end_time       DateTime
+  status         String    @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELLED, NO_SHOW
+  total_price    Float
+  payment_status String    @default("PENDING") // PENDING, PAID, FAILED, REFUNDED
+  created_at     DateTime  @default(now())
+
+  payments       Payment[]
+  reviews        Review[]
+  orders         Order[]
+}
+
+model Payment {
+  id             Int       @id @default(autoincrement())
+  user_id        Int
+  user           User      @relation(fields: [user_id], references: [id])
+  booking_id     Int?
+  booking        Booking?  @relation(fields: [booking_id], references: [id])
+  order_id       Int?
+  order          Order?    @relation(fields: [order_id], references: [id])
+  amount         Float
+  currency       String    @default("ETB")
+  provider       String?
+  transaction_id String?   @unique
+  status         String    @default("PENDING") // PENDING, PAID, FAILED, REFUNDED
+  created_at     DateTime  @default(now())
+}
+
+model Review {
+  id          Int       @id @default(autoincrement())
+  customer_id Int
+  customer    User      @relation(fields: [customer_id], references: [id])
+  business_id Int
+  business    Business  @relation(fields: [business_id], references: [id])
+  booking_id  Int?
+  booking     Booking?  @relation(fields: [booking_id], references: [id])
+  order_id    Int?
+  order       Order?    @relation(fields: [order_id], references: [id])
+  rating      Int       // 1 to 5
+  comment     String?
+  created_at  DateTime  @default(now())
+}
+
+model Favorite {
+  id          Int       @id @default(autoincrement())
+  user_id     Int
+  user        User      @relation(fields: [user_id], references: [id])
+  business_id Int
+  business    Business  @relation(fields: [business_id], references: [id])
+  created_at  DateTime  @default(now())
+
+  @@unique([user_id, business_id])
+}
+
+model Staff {
+  id          Int       @id @default(autoincrement())
+  business_id Int
+  business    Business  @relation(fields: [business_id], references: [id])
+  user_id     Int?
+  user        User?     @relation(fields: [user_id], references: [id])
+  name        String
+  role        String    @default("STAFF") // "STAFF", "RESOURCE"
+  status      String    @default("ACTIVE")
+  created_at  DateTime  @default(now())
+
+  bookings    Booking[]
+}
+
+model BusinessHours {
+  id          Int       @id @default(autoincrement())
+  business_id Int
+  business    Business  @relation(fields: [business_id], references: [id])
+  day_of_week Int       // 0 = Sunday, 1 = Monday, etc.
+  open_time   String    // e.g., "09:00"
+  close_time  String    // e.g., "17:00"
+  is_closed   Boolean   @default(false)
+
+  @@unique([business_id, day_of_week])
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  business_id Int
+  business    Business  @relation(fields: [business_id], references: [id])
+  name        String
+  description String?
+  price       Float
+  stock       Int       @default(0)
+  sku         String?
+  image       String?
+  status      String    @default("ACTIVE") // ACTIVE, OUT_OF_STOCK, ARCHIVED
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+
+  order_items OrderItem[]
+}
+
+model Order {
+  id               Int       @id @default(autoincrement())
+  customer_id      Int
+  customer         User      @relation(fields: [customer_id], references: [id])
+  business_id      Int
+  business         Business  @relation(fields: [business_id], references: [id])
+  booking_id       Int?
+  booking          Booking?  @relation(fields: [booking_id], references: [id])
+  status           String    @default("PENDING") // PENDING, CONFIRMED, PROCESSING, READY, OUT_FOR_DELIVERY, DELIVERED, CANCELLED
+  total_amount     Float
+  delivery_address String?
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @updatedAt
+
+  items            OrderItem[]
+  payments         Payment[]
+  reviews          Review[]
+}
+
+model OrderItem {
+  id          Int      @id @default(autoincrement())
+  order_id    Int
+  order       Order    @relation(fields: [order_id], references: [id])
+  product_id  Int
+  product     Product  @relation(fields: [product_id], references: [id])
+  quantity    Int
+  unit_price  Float
+}
+
