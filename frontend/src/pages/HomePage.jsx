@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CATEGORIES = [
   // Phase 1 — Core
@@ -36,6 +36,7 @@ const MOCK_BUSINESSES = [
 const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredBusinesses, setFilteredBusinesses] = useState(MOCK_BUSINESSES);
+  const navigate = useNavigate();
 
   const handleSearch = () => {
     const query = searchQuery.toLowerCase();
@@ -53,13 +54,7 @@ const HomePage = () => {
   };
 
   const handleCategoryClick = (categoryName) => {
-    setSearchQuery(categoryName);
-    const query = categoryName.toLowerCase();
-    const results = MOCK_BUSINESSES.filter(biz => 
-      biz.name.toLowerCase().includes(query) || 
-      biz.category.toLowerCase().includes(query)
-    );
-    setFilteredBusinesses(results);
+    navigate(`/category/${categoryName}`);
   };
 
   return (

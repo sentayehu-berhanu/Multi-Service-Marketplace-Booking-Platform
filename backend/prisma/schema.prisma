@@ -25,6 +25,7 @@ model User {
   favorites     Favorite[]
   staff_profiles Staff[]
   orders        Order[]
+  notifications Notification[]
 }
 
 model Category {
@@ -66,6 +67,8 @@ model Business {
   hours        BusinessHours[]
   products     Product[]
   orders       Order[]
+  coupons      Coupon[]
+  gallery      GalleryImage[]
 
   @@index([category_id])
   @@index([location_lat, location_lng])
@@ -79,6 +82,7 @@ model Service {
   description String?
   price       Float
   duration    Int       // duration in minutes
+  image       String?
   status      String    @default("ACTIVE")
   created_at  DateTime  @default(now())
 
@@ -219,5 +223,42 @@ model OrderItem {
   product     Product  @relation(fields: [product_id], references: [id])
   quantity    Int
   unit_price  Float
+}
+
+model Coupon {
+  id             Int       @id @default(autoincrement())
+  business_id    Int
+  business       Business  @relation(fields: [business_id], references: [id])
+  code           String
+  discount_type  String    // PERCENTAGE, FIXED_AMOUNT
+  discount_value Float
+  valid_from     DateTime
+  valid_until    DateTime
+  usage_limit    Int?
+  usage_count    Int       @default(0)
+  status         String    @default("ACTIVE") // ACTIVE, EXPIRED, INACTIVE
+  created_at     DateTime  @default(now())
+
+  @@unique([business_id, code]) // Code must be unique per business
+}
+
+model GalleryImage {
+  id          Int       @id @default(autoincrement())
+  business_id Int
+  business    Business  @relation(fields: [business_id], references: [id])
+  image_url   String
+  caption     String?
+  created_at  DateTime  @default(now())
+}
+
+model Notification {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  user       User     @relation(fields: [user_id], references: [id])
+  title      String
+  message    String
+  type       String   @default("SYSTEM") // SYSTEM, BOOKING, REVIEW, MESSAGE
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
 }
 

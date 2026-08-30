@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import UpdateAvailabilityModal from '../../components/UpdateAvailabilityModal';
+import CreateCouponModal from '../../components/CreateCouponModal';
+import UpdateGalleryModal from '../../components/UpdateGalleryModal';
 
 const DashboardHome = () => {
   const [business, setBusiness] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isAvailabilityModalOpen, setIsAvailabilityModalOpen] = useState(false);
+  const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
+  const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -63,7 +71,7 @@ const DashboardHome = () => {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '2rem' }}>Overview {business ? `- ${business.name}` : ''}</h1>
-        <button className="btn-primary" style={{ padding: '10px 20px', fontSize: '0.9rem' }} onClick={() => alert('Adding new services is coming soon!')}>+ Add Service</button>
+        <button className="btn-primary" style={{ padding: '10px 20px', fontSize: '0.9rem' }} onClick={() => navigate('/business-dashboard/services')}>+ Add Service</button>
       </div>
 
       {/* KPI Cards */}
@@ -129,13 +137,38 @@ const DashboardHome = () => {
         <div className="glass-panel" style={{ padding: '2rem' }}>
           <h3 style={{ marginBottom: '1.5rem' }}>Quick Actions</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <button className="btn-secondary" style={{ textAlign: 'left' }} onClick={() => alert('Update Availability feature is coming soon!')}>📅 Update Availability</button>
-            <button className="btn-secondary" style={{ textAlign: 'left' }} onClick={() => alert('Create Coupon feature is coming soon!')}>🎫 Create Coupon</button>
-            <button className="btn-secondary" style={{ textAlign: 'left' }} onClick={() => alert('Update Gallery feature is coming soon!')}>📸 Update Gallery</button>
+            <button className="btn-secondary" style={{ textAlign: 'left' }} onClick={() => setIsAvailabilityModalOpen(true)}>📅 Update Availability</button>
+            <button className="btn-secondary" style={{ textAlign: 'left' }} onClick={() => setIsCouponModalOpen(true)}>🎫 Create Coupon</button>
+            <button className="btn-secondary" style={{ textAlign: 'left' }} onClick={() => setIsGalleryModalOpen(true)}>📸 Update Gallery</button>
           </div>
         </div>
 
       </div>
+
+      {business && (
+        <UpdateAvailabilityModal 
+          isOpen={isAvailabilityModalOpen} 
+          onClose={() => setIsAvailabilityModalOpen(false)} 
+          businessId={business.id} 
+        />
+      )}
+
+      {business && (
+        <CreateCouponModal 
+          isOpen={isCouponModalOpen} 
+          onClose={() => setIsCouponModalOpen(false)} 
+          businessId={business.id}
+          onCouponCreated={(coupon) => alert(`Coupon ${coupon.code} created successfully!`)}
+        />
+      )}
+
+      {business && (
+        <UpdateGalleryModal 
+          isOpen={isGalleryModalOpen} 
+          onClose={() => setIsGalleryModalOpen(false)} 
+          businessId={business.id} 
+        />
+      )}
 
     </div>
   );
