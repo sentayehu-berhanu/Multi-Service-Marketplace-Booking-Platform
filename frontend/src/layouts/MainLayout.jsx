@@ -46,6 +46,9 @@ const MainLayout = () => {
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
             {token && user ? (
               <>
+                {user.role === 'ADMIN' && (
+                  <Link to="/admin" style={{ color: 'var(--danger)', fontWeight: 'bold' }} className="hover-scale">Admin Panel</Link>
+                )}
                 {user.role === 'BUSINESS_OWNER' && (
                   <Link to="/business-dashboard" style={{ color: 'var(--accent-primary)', fontWeight: 'bold' }} className="hover-scale">Dashboard</Link>
                 )}

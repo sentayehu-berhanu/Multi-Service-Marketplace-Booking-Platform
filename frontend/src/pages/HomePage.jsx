@@ -54,7 +54,19 @@ const HomePage = () => {
   };
 
   const handleCategoryClick = (categoryName) => {
-    navigate(`/category/${categoryName}`);
+    const specialRoutes = {
+      'Cosmetics': '/shop/cosmetics',
+      'Barber': '/shop/barber',
+      'Parking': '/shop/parking',
+      'Pharmacy': '/shop/pharmacy',
+      'Hotel': '/shop/hotel'
+    };
+
+    if (specialRoutes[categoryName]) {
+      navigate(specialRoutes[categoryName]);
+    } else {
+      navigate(`/category/${categoryName}`);
+    }
   };
 
   return (
@@ -107,7 +119,7 @@ const HomePage = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem' }}>
           {filteredBusinesses.length > 0 ? (
             filteredBusinesses.map(biz => (
-              <Link to={`/business/${biz.id}`} key={biz.id} className="hover-scale">
+              <Link to={biz.category === 'Barber' ? `/business/barber/${biz.id}` : biz.category === 'Salon' ? `/business/salon/${biz.id}` : biz.category === 'Parking' ? `/business/parking/${biz.id}` : `/business/${biz.id}`} key={biz.id} className="hover-scale">
                 <div className="glass-panel" style={{ overflow: 'hidden', height: '100%' }}>
                   <div style={{ height: '200px', background: `url(${biz.image}) center/cover no-repeat` }} />
                   <div style={{ padding: '1.5rem' }}>

@@ -98,7 +98,7 @@ const CategoryPage = () => {
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
             {businesses.map(biz => (
-              <Link to={`/business/${biz.id}`} key={biz.id} className="hover-scale">
+              <Link to={categoryName === "Women's Salon" ? `/business/salon/${biz.id}` : categoryName === "Barber" ? `/business/barber/${biz.id}` : categoryName === "Parking" ? `/business/parking/${biz.id}` : categoryName === "Café" ? `/business/cafe/${biz.id}` : `/business/${biz.id}`} key={biz.id} className="hover-scale">
                 <div className="glass-panel" style={{ overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ 
                     height: '220px', 

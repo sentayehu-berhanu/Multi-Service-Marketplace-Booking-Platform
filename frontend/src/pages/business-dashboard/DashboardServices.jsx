@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const DashboardServices = () => {
+  const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [businessId, setBusinessId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -33,6 +35,22 @@ const DashboardServices = () => {
       
       if (bizRes.data && bizRes.data.length > 0) {
         const business = bizRes.data[0];
+        
+        // Auto-redirect if they land on generic services but have a specialized dashboard
+        if (business.category?.slug === 'parking') {
+          return navigate('/business-dashboard/parking-spaces');
+        } else if (business.category?.slug === 'womens-salon' || business.category?.slug === 'salon') {
+          return navigate('/business-dashboard/salon-services');
+        } else if (business.category?.slug === 'cosmetics') {
+          return navigate('/business-dashboard/products');
+        } else if (business.category?.slug === 'pharmacy') {
+          return navigate('/business-dashboard/pharmacy-products');
+        } else if (business.category?.slug === 'cafe') {
+          return navigate('/business-dashboard/cafe-menu');
+        } else if (business.category?.slug === 'hotel') {
+          return navigate('/business-dashboard/hotel-rooms');
+        }
+
         setBusinessId(business.id);
         // Filter out archived services
         setServices(business.services.filter(s => s.status !== 'ARCHIVED'));
@@ -152,37 +170,35 @@ const DashboardServices = () => {
             No services found. Add your first service to get started!
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '800px' }}>
             {services.map(service => (
-              <div key={service.id} className="category-card" style={{ alignItems: 'flex-start', textAlign: 'left', padding: 0, cursor: 'default', overflow: 'hidden' }}>
-                {service.image && (
-                  <div style={{ width: '100%', height: '140px', backgroundImage: `url(${service.image})`, backgroundSize: 'cover', backgroundPosition: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}></div>
-                )}
-                <div style={{ padding: '1.5rem', width: '100%', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: '10px' }}>
-                    <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-primary)' }}>{service.name}</h3>
+              <div key={service.id} className="glass-panel hover-scale" style={{ padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '15px' }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '5px' }}>
+                    <h3 style={{ fontSize: '1.3rem', margin: 0 }}>{service.name}</h3>
                     <span style={{ 
-                      fontSize: '0.8rem', 
-                      padding: '3px 8px', 
+                      fontSize: '0.75rem', 
+                      padding: '2px 8px', 
                       borderRadius: '12px', 
                       background: service.status === 'ACTIVE' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
                       color: service.status === 'ACTIVE' ? 'var(--success)' : 'var(--danger)',
-                      height: 'fit-content'
+                      fontWeight: 'bold'
                     }}>
                       {service.status}
                     </span>
                   </div>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '15px', flex: 1 }}>
-                    {service.description || 'No description provided.'}
+                  <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '0.9rem' }}>
+                    ⏱ {service.duration} mins • {service.description || 'No description provided.'}
                   </p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', marginBottom: '15px' }}>
-                    <div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--accent-primary)' }}>{service.price} ETB</div>
-                    <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>⏱️ {service.duration} mins</div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+                  <div style={{ fontSize: '1.3rem', fontWeight: 'bold', color: 'var(--accent-primary)' }}>
+                    {service.price} ETB
                   </div>
-                  
-                  <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
-                    <button className="btn-secondary" style={{ flex: 1, padding: '8px' }} onClick={() => openEditModal(service)}>Edit</button>
-                    <button className="btn-secondary" style={{ flex: 1, padding: '8px', color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.3)' }} onClick={() => handleDelete(service.id)}>Delete</button>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.9rem' }} onClick={() => openEditModal(service)}>Edit</button>
+                    <button className="btn-secondary" style={{ padding: '6px 12px', fontSize: '0.9rem', color: 'var(--danger)', borderColor: 'rgba(239, 68, 68, 0.3)' }} onClick={() => handleDelete(service.id)}>Delete</button>
                   </div>
                 </div>
               </div>

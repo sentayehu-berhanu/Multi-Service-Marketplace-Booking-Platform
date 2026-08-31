@@ -1,16 +1,20 @@
 const express = require('express');
-const { createBusiness, getMyBusinesses, getAllBusinesses, addService, updateService, deleteService, getBusinessCustomers } = require('../controllers/businessController');
+const { createBusiness, getMyBusinesses, getAllBusinesses, addService, updateService, deleteService, getBusinessCustomers, getCategories } = require('../controllers/businessController');
 const { authenticate, authorize } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 const staffRoutes = require('./staffRoutes');
 const availabilityRoutes = require('./availabilityRoutes');
 const couponRoutes = require('./couponRoutes');
 const galleryRoutes = require('./galleryRoutes');
+const productRoutes = require('./productRoutes');
 
 const router = express.Router();
 
 // Public route to get all businesses (can be filtered by category via query params)
 router.get('/', getAllBusinesses);
+
+// Public route to get all categories
+router.get('/categories', getCategories);
 
 // Only BUSINESS_OWNER or ADMIN can register businesses and view their own dashboard
 router.post('/', authenticate, authorize('BUSINESS_OWNER', 'ADMIN'), createBusiness);
@@ -27,5 +31,6 @@ router.use('/:businessId/staff', staffRoutes);
 router.use('/:businessId/hours', availabilityRoutes);
 router.use('/:businessId/coupons', couponRoutes);
 router.use('/:businessId/gallery', galleryRoutes);
+router.use('/:businessId/products', productRoutes);
 
 module.exports = router;

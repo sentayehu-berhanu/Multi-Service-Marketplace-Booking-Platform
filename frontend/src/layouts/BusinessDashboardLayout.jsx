@@ -10,6 +10,7 @@ const BusinessDashboardLayout = () => {
 
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [business, setBusiness] = useState(null);
   const notifRef = useRef(null);
 
   useEffect(() => {
@@ -25,8 +26,24 @@ const BusinessDashboardLayout = () => {
   useEffect(() => {
     if (user) {
       fetchNotifications();
+      fetchBusiness();
     }
   }, [user]);
+
+  const fetchBusiness = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const res = await axios.get('http://localhost:5000/api/businesses/my', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.data && res.data.length > 0) {
+        setBusiness(res.data[0]);
+      }
+    } catch (err) {
+      console.error('Failed to fetch business:', err);
+    }
+  };
 
   // Click outside to close notifications
   useEffect(() => {
@@ -105,9 +122,42 @@ const BusinessDashboardLayout = () => {
           <Link to="/business-dashboard/calendar" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
             📅 Calendar
           </Link>
-          <Link to="/business-dashboard/services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
-            🏷️ Services
-          </Link>
+          
+          {business?.category?.slug === 'cosmetics' ? (
+            <Link to="/business-dashboard/products" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+              💄 Products
+            </Link>
+          ) : business?.category?.slug === 'pharmacy' ? (
+            <Link to="/business-dashboard/pharmacy-products" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+              💊 Inventory
+            </Link>
+          ) : business?.category?.slug === 'cafe' ? (
+            <>
+              <Link to="/business-dashboard/cafe-menu" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+                ☕ Café Menu
+              </Link>
+              <Link to="/business-dashboard/cafe-tables" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+                🪑 Tables
+              </Link>
+            </>
+          ) : business?.category?.slug === 'hotel' ? (
+            <Link to="/business-dashboard/hotel-rooms" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+              🛏️ Rooms
+            </Link>
+          ) : business?.category?.slug === 'womens-salon' || business?.category?.slug === 'salon' ? (
+            <Link to="/business-dashboard/salon-services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+              💅 Services
+            </Link>
+          ) : business?.category?.slug === 'parking' ? (
+            <Link to="/business-dashboard/parking-spaces" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+              🚗 Parking Spaces
+            </Link>
+          ) : (
+            <Link to="/business-dashboard/services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+              🏷️ Services
+            </Link>
+          )}
+
           <Link to="/business-dashboard/customers" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
             👥 Customers
           </Link>

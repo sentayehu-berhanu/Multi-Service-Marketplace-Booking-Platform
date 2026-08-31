@@ -42,7 +42,7 @@ exports.getAllBusinesses = async (req, res) => {
       whereClause = {
         category: {
           name: {
-            equals: category,
+            contains: category,
             mode: 'insensitive' // case-insensitive match
           }
         }
@@ -267,6 +267,20 @@ exports.getBusinessCustomers = async (req, res) => {
     res.json(Array.from(customersMap.values()));
   } catch (error) {
     console.error('getBusinessCustomers error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Get all categories
+exports.getCategories = async (req, res) => {
+  try {
+    const categories = await prisma.category.findMany({
+      where: { status: 'ACTIVE' },
+      orderBy: { name: 'asc' }
+    });
+    res.json(categories);
+  } catch (error) {
+    console.error('getCategories error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

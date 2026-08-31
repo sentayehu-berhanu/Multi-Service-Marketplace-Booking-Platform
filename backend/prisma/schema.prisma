@@ -189,6 +189,10 @@ model Product {
   stock       Int       @default(0)
   sku         String?
   image       String?
+  category    String?   // For e-commerce filtering e.g., 'Skin Care'
+  brand       String?
+  rating      Float     @default(0)
+  review_count Int      @default(0)
   status      String    @default("ACTIVE") // ACTIVE, OUT_OF_STOCK, ARCHIVED
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
