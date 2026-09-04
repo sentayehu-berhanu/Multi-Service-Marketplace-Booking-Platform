@@ -41,6 +41,7 @@ import DashboardHotelRooms from './pages/business-dashboard/DashboardHotelRooms'
 import DashboardAutoServices from './pages/business-dashboard/DashboardAutoServices';
 import DashboardCustomers from './pages/business-dashboard/DashboardCustomers';
 import DashboardReviews from './pages/business-dashboard/DashboardReviews';
+import DashboardCleaningServices from './pages/business-dashboard/DashboardCleaningServices';
 
 import AdminDashboardLayout from './layouts/AdminDashboardLayout';
 import AdminBusinesses from './pages/admin-dashboard/AdminBusinesses';
@@ -103,6 +104,7 @@ function App() {
           <Route path="cafe-tables" element={<DashboardCafeTables />} />
           <Route path="hotel-rooms" element={<DashboardHotelRooms />} />
           <Route path="auto-services" element={<DashboardAutoServices />} />
+          <Route path="cleaning-services" element={<DashboardCleaningServices />} />
           <Route path="customers" element={<DashboardCustomers />} />
           <Route path="reviews" element={<DashboardReviews />} />
         </Route>

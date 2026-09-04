@@ -1,16 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
-const MOCK_PROVIDERS = [
-  { id: 1, name: 'CleanPro', rating: 4.9, jobs: '500+', price: '120 ETB', image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-  { id: 2, name: 'QuickClean', rating: 4.7, jobs: '300+', price: '95 ETB', image: 'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' },
-  { id: 3, name: 'Shine & Bright', rating: 4.8, jobs: '450+', price: '110 ETB', image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80' }
-];
+import axios from 'axios';
 
 const CleaningSearch = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [providers, setProviders] = useState([]);
 
   // Form State
   const [serviceType, setServiceType] = useState('House Cleaning');
@@ -19,14 +15,45 @@ const CleaningSearch = () => {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
 
-  const handleGetQuote = (e) => {
+  const handleGetQuote = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate API call for fetching quotes
-    setTimeout(() => {
-      setLoading(false);
+    
+    try {
+      // Fetch cleaning businesses
+      const res = await axios.get('http://localhost:5000/api/businesses?category=cleaning');
+      const businesses = res.data;
+
+      // Filter businesses that offer the selected serviceType
+      const availableProviders = [];
+
+      businesses.forEach(business => {
+        // Find if this business has an active service matching the serviceType
+        const matchingService = business.services?.find(
+          s => s.status === 'ACTIVE' && s.description && s.description.includes(`[${serviceType}]`)
+        );
+
+        if (matchingService) {
+          availableProviders.push({
+            id: business.id,
+            name: business.name,
+            rating: business.rating || 4.8,
+            jobs: business.review_count || '10+',
+            price: `${matchingService.price} ETB`,
+            image: matchingService.image || business.cover_image || 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            matchingService: matchingService
+          });
+        }
+      });
+
+      setProviders(availableProviders);
       setStep(2);
-    }, 1500);
+    } catch (error) {
+      console.error("Failed to fetch quotes", error);
+      alert("Failed to find providers. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSelectProvider = (provider) => {
@@ -191,41 +218,47 @@ const CleaningSearch = () => {
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              {MOCK_PROVIDERS.map(provider => (
-                <div key={provider.id} style={{ display: 'flex', background: 'white', borderRadius: '20px', overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', transition: '0.2s', ':hover': { transform: 'translateY(-3px)' } }}>
-                  <div style={{ width: '200px', background: `url(${provider.image}) center/cover no-repeat` }}></div>
-                  <div style={{ padding: '2rem', flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    
-                    <div>
-                      <h3 style={{ fontSize: '1.5rem', margin: '0 0 10px 0', color: '#0f172a' }}>{provider.name}</h3>
-                      <div style={{ display: 'flex', gap: '15px', color: '#64748b', marginBottom: '10px' }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px', background: '#fef08a', color: '#854d0e', padding: '4px 10px', borderRadius: '20px', fontWeight: 'bold' }}>
-                          ⭐ {provider.rating}
-                        </span>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                          🧹 {provider.jobs} jobs
-                        </span>
-                      </div>
-                      <p style={{ margin: 0, color: '#94a3b8' }}>Verified Professional • Eco-friendly products</p>
-                    </div>
-
-                    <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '15px' }}>
-                      <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a' }}>
-                        {provider.price}
-                      </div>
-                      <button 
-                        onClick={() => handleSelectProvider(provider)}
-                        style={{ padding: '12px 24px', background: '#0f172a', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.2s' }}
-                        onMouseOver={(e) => e.currentTarget.style.background = '#1e293b'}
-                        onMouseOut={(e) => e.currentTarget.style.background = '#0f172a'}
-                      >
-                        SELECT PROVIDER
-                      </button>
-                    </div>
-
-                  </div>
+              {providers.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '3rem', background: 'white', borderRadius: '20px', color: '#64748b' }}>
+                  No providers found for the selected service type. Try another option or check back later!
                 </div>
-              ))}
+              ) : (
+                providers.map(provider => (
+                  <div key={provider.id} style={{ display: 'flex', background: 'white', borderRadius: '20px', overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)', transition: '0.2s', ':hover': { transform: 'translateY(-3px)' } }}>
+                    <div style={{ width: '200px', background: `url(${provider.image}) center/cover no-repeat` }}></div>
+                    <div style={{ padding: '2rem', flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      
+                      <div>
+                        <h3 style={{ fontSize: '1.5rem', margin: '0 0 10px 0', color: '#0f172a' }}>{provider.name}</h3>
+                        <div style={{ display: 'flex', gap: '15px', color: '#64748b', marginBottom: '10px' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '5px', background: '#fef08a', color: '#854d0e', padding: '4px 10px', borderRadius: '20px', fontWeight: 'bold' }}>
+                            ⭐ {provider.rating}
+                          </span>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            🧹 {provider.jobs} jobs
+                          </span>
+                        </div>
+                        <p style={{ margin: 0, color: '#94a3b8' }}>Verified Professional • Eco-friendly products</p>
+                      </div>
+
+                      <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '15px' }}>
+                        <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a' }}>
+                          {provider.price}
+                        </div>
+                        <button 
+                          onClick={() => handleSelectProvider(provider)}
+                          style={{ padding: '12px 24px', background: '#0f172a', color: 'white', border: 'none', borderRadius: '10px', fontWeight: 'bold', cursor: 'pointer', transition: 'background 0.2s' }}
+                          onMouseOver={(e) => e.currentTarget.style.background = '#1e293b'}
+                          onMouseOut={(e) => e.currentTarget.style.background = '#0f172a'}
+                        >
+                          SELECT PROVIDER
+                        </button>
+                      </div>
+
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}

@@ -137,6 +137,19 @@ exports.createBooking = async (req, res) => {
       }
     });
 
+    // Notify the business owner
+    const business = await prisma.business.findUnique({ where: { id: parseInt(business_id) } });
+    if (business) {
+      await prisma.notification.create({
+        data: {
+          user_id: business.owner_id,
+          title: 'New Booking Request',
+          message: `You have a new booking request for ${service.name} at ${requestedStart.toLocaleString()}.`,
+          type: 'BOOKING'
+        }
+      });
+    }
+
     res.status(201).json({ message: 'Booking created successfully.', booking });
   } catch (error) {
     console.error('createBooking error:', error);

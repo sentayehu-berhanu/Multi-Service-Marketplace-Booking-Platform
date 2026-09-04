@@ -52,12 +52,27 @@ const CleaningCheckoutFlow = () => {
 
   const handleConfirm = async () => {
     setLoading(true);
-    // Simulating network request for payment and booking creation
-    await new Promise(resolve => setTimeout(resolve, 2000)); 
-    
-    // In a real app, this would be an axios.post to /api/bookings
-    setLoading(false);
-    setStep(4);
+    try {
+      const token = localStorage.getItem('token');
+      
+      // Combine date and time to ISO string
+      const startDateTime = new Date(`${serviceDetails.date}T${serviceDetails.time}`);
+      
+      await axios.post('http://localhost:5000/api/bookings', {
+        business_id: provider.id,
+        service_id: provider.matchingService.id,
+        start_time: startDateTime.toISOString()
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      setStep(4);
+    } catch (err) {
+      console.error("Booking failed:", err);
+      alert(err.response?.data?.error || "Failed to confirm booking. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

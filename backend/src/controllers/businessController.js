@@ -53,6 +53,7 @@ exports.getAllBusinesses = async (req, res) => {
       where: whereClause,
       include: {
         category: true,
+        services: true
       },
       orderBy: { created_at: 'desc' }
     });
