@@ -208,13 +208,24 @@ const PharmacyCheckoutFlow = () => {
               <select 
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
-                style={{ width: '100%', padding: '15px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '1.1rem', outline: 'none', marginBottom: '2rem' }}
+                style={{ width: '100%', padding: '15px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '1.1rem', outline: 'none', marginBottom: '1rem' }}
               >
                 <option value="Cash on Delivery">Cash on Delivery</option>
                 <option value="Telebirr">Telebirr Mobile Money</option>
                 <option value="CBE Birr">CBE Birr</option>
                 <option value="Card">Credit/Debit Card</option>
               </select>
+
+              {paymentMethod === 'Telebirr' && (
+                <div style={{ marginBottom: '2rem', animation: 'fadeIn 0.3s ease' }}>
+                  <input type="tel" placeholder="09XX XXX XXX" style={{ width: '100%', boxSizing: 'border-box', padding: '15px', borderRadius: '10px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                </div>
+              )}
+              {paymentMethod === 'CBE Birr' && (
+                <div style={{ marginBottom: '2rem', animation: 'fadeIn 0.3s ease' }}>
+                  <input type="tel" placeholder="1000XXXXXXXXX" style={{ width: '100%', boxSizing: 'border-box', padding: '15px', borderRadius: '10px', border: '1px solid #cbd5e1', outline: 'none' }} />
+                </div>
+              )}
 
               <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>

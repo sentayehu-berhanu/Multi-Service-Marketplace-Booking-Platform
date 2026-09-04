@@ -25,6 +25,8 @@ import AutoServiceSearch from './pages/shop/AutoServiceSearch';
 import AutoServiceDetail from './pages/business-pages/AutoServiceDetail';
 import AutoCheckoutFlow from './pages/booking/AutoCheckoutFlow';
 import BookingFlow from './pages/booking/BookingFlow';
+import CleaningSearch from './pages/shop/CleaningSearch';
+import CleaningCheckoutFlow from './pages/booking/CleaningCheckoutFlow';
 import BusinessDashboardLayout from './layouts/BusinessDashboardLayout';
 import DashboardHome from './pages/business-dashboard/DashboardHome';
 import DashboardCalendar from './pages/business-dashboard/DashboardCalendar';
@@ -71,6 +73,8 @@ function App() {
           <Route path="business/restaurant/:id" element={<RestaurantDetail />} />
           <Route path="checkout/restaurant" element={<RestaurantCheckoutFlow />} />
           <Route path="shop/auto" element={<AutoServiceSearch />} />
+          <Route path="shop/cleaning" element={<CleaningSearch />} />
+          <Route path="checkout/cleaning" element={<CleaningCheckoutFlow />} />
           <Route path="business/auto/:id" element={<AutoServiceDetail />} />
           <Route path="checkout/auto" element={<AutoCheckoutFlow />} />
           <Route path="business/pharmacy/product/:id" element={<PharmacyProductDetail />} />

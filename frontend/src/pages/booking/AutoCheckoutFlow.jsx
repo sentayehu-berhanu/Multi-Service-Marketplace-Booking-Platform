@@ -20,6 +20,7 @@ const AutoCheckoutFlow = () => {
   });
 
   const [paymentInfo, setPaymentInfo] = useState({
+    method: 'telebirr',
     cardNumber: '',
     expiry: '',
     cvv: ''
@@ -41,7 +42,7 @@ const AutoCheckoutFlow = () => {
       }
     }
     if (step === 2) {
-      if (!paymentInfo.cardNumber) {
+      if (paymentInfo.method === 'card' && !paymentInfo.cardNumber) {
         return alert("Please enter payment details.");
       }
     }
@@ -116,18 +117,52 @@ const AutoCheckoutFlow = () => {
             <div style={{ background: 'white', padding: '2rem', borderRadius: '15px', border: '1px solid #e2e8f0' }}>
               <h2 style={{ margin: '0 0 1.5rem 0', color: '#0f172a', fontSize: '1.5rem' }}>Payment Method</h2>
               
-              <div style={{ border: '1px solid #2563eb', padding: '15px', borderRadius: '8px', background: '#eff6ff', marginBottom: '20px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold', color: '#0f172a', cursor: 'pointer' }}>
-                  <input type="radio" checked readOnly />
-                  Credit / Debit Card
-                </label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '25px' }}>
+                <div onClick={() => setPaymentInfo({...paymentInfo, method: 'card'})} style={{ border: paymentInfo.method === 'card' ? '2px solid #3b82f6' : '1px solid #e2e8f0', padding: '15px', borderRadius: '8px', background: paymentInfo.method === 'card' ? '#eff6ff' : 'white', cursor: 'pointer' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold', color: paymentInfo.method === 'card' ? '#1e3a8a' : '#475569', cursor: 'pointer' }}>
+                    <input type="radio" checked={paymentInfo.method === 'card'} readOnly /> 💳 Credit / Debit Card
+                  </label>
+                </div>
+                <div onClick={() => setPaymentInfo({...paymentInfo, method: 'telebirr'})} style={{ border: paymentInfo.method === 'telebirr' ? '2px solid #3b82f6' : '1px solid #e2e8f0', padding: '15px', borderRadius: '8px', background: paymentInfo.method === 'telebirr' ? '#eff6ff' : 'white', cursor: 'pointer' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold', color: paymentInfo.method === 'telebirr' ? '#1e3a8a' : '#475569', cursor: 'pointer' }}>
+                    <input type="radio" checked={paymentInfo.method === 'telebirr'} readOnly /> 📱 Telebirr
+                  </label>
+                </div>
+                <div onClick={() => setPaymentInfo({...paymentInfo, method: 'cbebirr'})} style={{ border: paymentInfo.method === 'cbebirr' ? '2px solid #3b82f6' : '1px solid #e2e8f0', padding: '15px', borderRadius: '8px', background: paymentInfo.method === 'cbebirr' ? '#eff6ff' : 'white', cursor: 'pointer' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold', color: paymentInfo.method === 'cbebirr' ? '#1e3a8a' : '#475569', cursor: 'pointer' }}>
+                    <input type="radio" checked={paymentInfo.method === 'cbebirr'} readOnly /> 🏦 CBE Birr
+                  </label>
+                </div>
+                <div onClick={() => setPaymentInfo({...paymentInfo, method: 'cash'})} style={{ border: paymentInfo.method === 'cash' ? '2px solid #3b82f6' : '1px solid #e2e8f0', padding: '15px', borderRadius: '8px', background: paymentInfo.method === 'cash' ? '#eff6ff' : 'white', cursor: 'pointer' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontWeight: 'bold', color: paymentInfo.method === 'cash' ? '#1e3a8a' : '#475569', cursor: 'pointer' }}>
+                    <input type="radio" checked={paymentInfo.method === 'cash'} readOnly /> 💵 Pay at Shop
+                  </label>
+                </div>
               </div>
 
-              <input type="text" placeholder="Card Number *" value={paymentInfo.cardNumber} onChange={e => setPaymentInfo({...paymentInfo, cardNumber: e.target.value})} style={{ width: '100%', boxSizing: 'border-box', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', marginBottom: '15px' }} />
-              <div style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
-                <input type="text" placeholder="MM/YY" value={paymentInfo.expiry} onChange={e => setPaymentInfo({...paymentInfo, expiry: e.target.value})} style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-                <input type="text" placeholder="CVV" value={paymentInfo.cvv} onChange={e => setPaymentInfo({...paymentInfo, cvv: e.target.value})} style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
-              </div>
+              {paymentInfo.method === 'card' && (
+                <div style={{ animation: 'fadeIn 0.3s ease' }}>
+                  <input type="text" placeholder="Card Number *" value={paymentInfo.cardNumber} onChange={e => setPaymentInfo({...paymentInfo, cardNumber: e.target.value})} style={{ width: '100%', boxSizing: 'border-box', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', marginBottom: '15px' }} />
+                  <div style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
+                    <input type="text" placeholder="MM/YY" value={paymentInfo.expiry} onChange={e => setPaymentInfo({...paymentInfo, expiry: e.target.value})} style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+                    <input type="text" placeholder="CVV" value={paymentInfo.cvv} onChange={e => setPaymentInfo({...paymentInfo, cvv: e.target.value})} style={{ flex: 1, padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+                  </div>
+                </div>
+              )}
+              
+              {paymentInfo.method === 'telebirr' && (
+                <div style={{ padding: '15px', background: '#f8fafc', borderRadius: '8px', marginBottom: '20px', animation: 'fadeIn 0.3s ease' }}>
+                  <label style={{ display: 'block', color: '#475569', marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>Telebirr Mobile Number *</label>
+                  <input type="tel" placeholder="09XX XXX XXX" style={{ width: '100%', boxSizing: 'border-box', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+                </div>
+              )}
+              
+              {paymentInfo.method === 'cbebirr' && (
+                <div style={{ padding: '15px', background: '#f8fafc', borderRadius: '8px', marginBottom: '20px', animation: 'fadeIn 0.3s ease' }}>
+                  <label style={{ display: 'block', color: '#475569', marginBottom: '8px', fontSize: '0.9rem', fontWeight: 'bold' }}>CBE Account Number *</label>
+                  <input type="tel" placeholder="1000XXXXXXXXX" style={{ width: '100%', boxSizing: 'border-box', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+                </div>
+              )}
 
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <button onClick={() => setStep(1)} style={{ background: '#f1f5f9', color: '#475569', padding: '15px 30px', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer' }}>Back</button>
@@ -146,6 +181,13 @@ const AutoCheckoutFlow = () => {
                 <h3 style={{ margin: '0 0 10px 0', fontSize: '1.1rem', color: '#0f172a' }}>{customerInfo.firstName} {customerInfo.lastName}</h3>
                 <p style={{ margin: 0, color: '#64748b' }}>{customerInfo.email} • {customerInfo.phone}</p>
                 <p style={{ margin: '10px 0 0 0', color: '#475569', fontStyle: 'italic' }}>Vehicle Info: {customerInfo.specialRequests}</p>
+                
+                <h3 style={{ margin: '15px 0 10px 0', fontSize: '1.1rem', color: '#0f172a' }}>Payment Method</h3>
+                <p style={{ margin: 0, color: '#475569' }}>
+                  {paymentInfo.method === 'card' ? '💳 Credit / Debit Card' : 
+                   paymentInfo.method === 'telebirr' ? '📱 Telebirr' : 
+                   paymentInfo.method === 'cbebirr' ? '🏦 CBE Birr' : '💵 Pay at Shop'}
+                </p>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>

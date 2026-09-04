@@ -133,10 +133,22 @@ const HotelBookingFlow = () => {
                     <input type="radio" name="payment" value="telebirr" checked={paymentMethod === 'telebirr'} onChange={(e) => setPaymentMethod(e.target.value)} />
                     <span style={{ fontWeight: 'bold', color: '#0f172a' }}>Telebirr</span>
                   </label>
+                  {paymentMethod === 'telebirr' && (
+                    <div style={{ padding: '0 15px', animation: 'fadeIn 0.3s ease', marginTop: '-5px' }}>
+                      <input type="tel" placeholder="09XX XXX XXX" style={{ width: '100%', boxSizing: 'border-box', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+                    </div>
+                  )}
+
                   <label style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '15px', border: paymentMethod === 'cbe' ? '2px solid #2563eb' : '1px solid #e2e8f0', borderRadius: '10px', cursor: 'pointer', background: paymentMethod === 'cbe' ? '#eff6ff' : 'white' }}>
                     <input type="radio" name="payment" value="cbe" checked={paymentMethod === 'cbe'} onChange={(e) => setPaymentMethod(e.target.value)} />
                     <span style={{ fontWeight: 'bold', color: '#0f172a' }}>CBE Birr</span>
                   </label>
+                  {paymentMethod === 'cbe' && (
+                    <div style={{ padding: '0 15px', animation: 'fadeIn 0.3s ease', marginTop: '-5px' }}>
+                      <input type="tel" placeholder="1000XXXXXXXXX" style={{ width: '100%', boxSizing: 'border-box', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }} />
+                    </div>
+                  )}
+
                   <label style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '15px', border: paymentMethod === 'card' ? '2px solid #2563eb' : '1px solid #e2e8f0', borderRadius: '10px', cursor: 'pointer', background: paymentMethod === 'card' ? '#eff6ff' : 'white' }}>
                     <input type="radio" name="payment" value="card" checked={paymentMethod === 'card'} onChange={(e) => setPaymentMethod(e.target.value)} />
                     <span style={{ fontWeight: 'bold', color: '#0f172a' }}>Credit/Debit Card</span>

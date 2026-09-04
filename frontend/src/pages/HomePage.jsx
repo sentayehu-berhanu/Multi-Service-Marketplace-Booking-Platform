@@ -61,7 +61,8 @@ const HomePage = () => {
       'Pharmacy': '/shop/pharmacy',
       'Hotel': '/shop/hotel',
       'Restaurant': '/shop/restaurant',
-      'Car Wash': '/shop/auto'
+      'Car Wash': '/shop/auto',
+      'Cleaning': '/shop/cleaning'
     };
 
     if (specialRoutes[categoryName]) {

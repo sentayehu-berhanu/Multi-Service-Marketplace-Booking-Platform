@@ -28,6 +28,9 @@ const BookingFlow = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   
+  const [paymentMethod, setPaymentMethod] = useState('telebirr');
+  const [paymentDetails, setPaymentDetails] = useState('');
+  
   // Mock Barbers
   const BARBERS = [
     { id: 1, name: 'Mike', rating: 4.9, avatar: '🧔🏽‍♂️' },
@@ -254,23 +257,50 @@ const BookingFlow = () => {
             <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginBottom: '2rem' }}>Complete your booking by paying securely.</p>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '400px', margin: '0 auto' }}>
-              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '10px', border: '1px solid var(--primary)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div 
+                onClick={() => setPaymentMethod('card')}
+                style={{ background: paymentMethod === 'card' ? 'rgba(79, 70, 229, 0.2)' : 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '10px', border: paymentMethod === 'card' ? '2px solid var(--primary)' : '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer' }}
+              >
                 <span style={{ fontSize: '1.5rem' }}>💳</span>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 'bold' }}>Credit / Debit Card</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Mock Payment Gateway</div>
                 </div>
-                <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'var(--primary)' }} />
+                <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid var(--primary)', background: paymentMethod === 'card' ? 'var(--primary)' : 'transparent' }} />
               </div>
               
-              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div 
+                onClick={() => setPaymentMethod('telebirr')}
+                style={{ background: paymentMethod === 'telebirr' ? 'rgba(79, 70, 229, 0.2)' : 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '10px', border: paymentMethod === 'telebirr' ? '2px solid var(--primary)' : '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer' }}
+              >
                 <span style={{ fontSize: '1.5rem' }}>📱</span>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 'bold' }}>Telebirr / CBE Birr</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Mobile Money</div>
+                  <div style={{ fontWeight: 'bold' }}>Telebirr</div>
                 </div>
-                <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.2)' }} />
+                <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid var(--primary)', background: paymentMethod === 'telebirr' ? 'var(--primary)' : 'transparent' }} />
               </div>
+
+              {paymentMethod === 'telebirr' && (
+                <div style={{ padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '10px', marginTop: '-0.5rem' }}>
+                  <input type="tel" placeholder="09XX XXX XXX" value={paymentDetails} onChange={e => setPaymentDetails(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: 'white' }} />
+                </div>
+              )}
+
+              <div 
+                onClick={() => setPaymentMethod('cbebirr')}
+                style={{ background: paymentMethod === 'cbebirr' ? 'rgba(79, 70, 229, 0.2)' : 'rgba(255,255,255,0.02)', padding: '1rem', borderRadius: '10px', border: paymentMethod === 'cbebirr' ? '2px solid var(--primary)' : '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '1rem', cursor: 'pointer' }}
+              >
+                <span style={{ fontSize: '1.5rem' }}>🏦</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 'bold' }}>CBE Birr</div>
+                </div>
+                <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '2px solid var(--primary)', background: paymentMethod === 'cbebirr' ? 'var(--primary)' : 'transparent' }} />
+              </div>
+
+              {paymentMethod === 'cbebirr' && (
+                <div style={{ padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '10px', marginTop: '-0.5rem' }}>
+                  <input type="tel" placeholder="1000XXXXXXXXX" value={paymentDetails} onChange={e => setPaymentDetails(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: 'white' }} />
+                </div>
+              )}
             </div>
           </div>
         )}
