@@ -45,7 +45,7 @@ const DashboardServices = () => {
           return navigate('/business-dashboard/products');
         } else if (business.category?.slug === 'pharmacy') {
           return navigate('/business-dashboard/pharmacy-products');
-        } else if (business.category?.slug === 'cafe') {
+        } else if (business.category?.slug === 'cafe' || business.category?.slug === 'restaurant') {
           return navigate('/business-dashboard/cafe-menu');
         } else if (business.category?.slug === 'hotel') {
           return navigate('/business-dashboard/hotel-rooms');

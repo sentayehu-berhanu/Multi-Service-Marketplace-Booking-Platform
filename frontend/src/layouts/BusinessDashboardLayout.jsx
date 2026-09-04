@@ -131,10 +131,10 @@ const BusinessDashboardLayout = () => {
             <Link to="/business-dashboard/pharmacy-products" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
               💊 Inventory
             </Link>
-          ) : business?.category?.slug === 'cafe' ? (
+          ) : business?.category?.slug === 'cafe' || business?.category?.slug === 'restaurant' ? (
             <>
               <Link to="/business-dashboard/cafe-menu" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
-                ☕ Café Menu
+                🍽️ Menu
               </Link>
               <Link to="/business-dashboard/cafe-tables" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
                 🪑 Tables
@@ -143,6 +143,10 @@ const BusinessDashboardLayout = () => {
           ) : business?.category?.slug === 'hotel' ? (
             <Link to="/business-dashboard/hotel-rooms" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
               🛏️ Rooms
+            </Link>
+          ) : business?.category?.slug === 'auto' || business?.category?.slug === 'car-wash' ? (
+            <Link to="/business-dashboard/auto-services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+              🚗 Auto Services
             </Link>
           ) : business?.category?.slug === 'womens-salon' || business?.category?.slug === 'salon' ? (
             <Link to="/business-dashboard/salon-services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>

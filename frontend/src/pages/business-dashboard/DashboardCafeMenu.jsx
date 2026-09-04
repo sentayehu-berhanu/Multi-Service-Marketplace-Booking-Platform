@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-const CATEGORIES = ['Coffee', 'Food', 'Pastries', 'Drinks', 'Dessert'];
+const CATEGORIES = ['Main Course', 'Appetizer', 'Coffee', 'Food', 'Pastries', 'Drinks', 'Dessert', 'Special'];
 
 const DashboardCafeMenu = () => {
   const [products, setProducts] = useState([]);
@@ -145,7 +144,7 @@ const DashboardCafeMenu = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <span style={{ textTransform: 'uppercase', color: '#92400e', fontSize: '0.9rem', fontWeight: 'bold', letterSpacing: '2px' }}>Dashboard</span>
-          <h1 style={{ fontSize: '2.5rem', margin: '0.5rem 0 0 0', color: '#451a03' }}>Café Menu</h1>
+          <h1 style={{ fontSize: '2.5rem', margin: '0.5rem 0 0 0', color: '#451a03' }}>Menu Builder</h1>
         </div>
         <button 
           onClick={openAddModal}

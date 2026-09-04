@@ -1,5 +1,5 @@
 const express = require('express');
-const { createBusiness, getMyBusinesses, getAllBusinesses, addService, updateService, deleteService, getBusinessCustomers, getCategories } = require('../controllers/businessController');
+const { createBusiness, getMyBusinesses, getAllBusinesses, addService, updateService, deleteService, getBusinessCustomers, getCategories, getBusinessServices } = require('../controllers/businessController');
 const { authenticate, authorize } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 const staffRoutes = require('./staffRoutes');
@@ -25,6 +25,9 @@ router.delete('/:id/services/:serviceId', authenticate, authorize('BUSINESS_OWNE
 
 // Customers route
 router.get('/:id/customers', authenticate, authorize('BUSINESS_OWNER', 'ADMIN'), getBusinessCustomers);
+
+// Public route to get services for a specific business
+router.get('/:id/services', getBusinessServices);
 
 // Nested routes for Staff, Availability, Coupons, Gallery
 router.use('/:businessId/staff', staffRoutes);

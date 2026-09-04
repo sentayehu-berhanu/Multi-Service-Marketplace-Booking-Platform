@@ -56,6 +56,32 @@ const HotelDetail = () => {
               'https://images.unsplash.com/photo-1542314831-c6a4d14eff40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
             ]
           });
+          
+          try {
+            const prodRes = await axios.get(`http://localhost:5000/api/products?businessId=${found.id}`);
+            if (prodRes.data && prodRes.data.length > 0) {
+              const roomKeywords = ['Room', 'room', 'Suite', 'suite', 'Penthouse', 'penthouse', 'Villa', 'villa'];
+              const filteredRooms = prodRes.data.filter(p => {
+                if (p.status === 'ARCHIVED') return false;
+                const isRoomCategory = p.category && roomKeywords.some(kw => p.category.includes(kw));
+                const isRoomName = p.name && roomKeywords.some(kw => p.name.includes(kw));
+                return isRoomCategory || isRoomName;
+              });
+
+              setRooms(filteredRooms.map(p => ({
+                id: p.id,
+                name: p.name,
+                price: p.price,
+                capacity: p.category?.includes('Family') ? 4 : 2, 
+                beds: p.category?.includes('Suite') ? '1 King Bed + Sofa' : '1 Double Bed',
+                view: 'City View',
+                image: p.image?.startsWith('/uploads') ? 'http://localhost:5000' + p.image : (p.image || 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'),
+                description: p.description
+              })));
+            }
+          } catch (e) {
+            console.error("Failed to fetch rooms:", e);
+          }
         }
       } catch (err) {
         console.error(err);

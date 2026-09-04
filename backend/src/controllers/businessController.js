@@ -41,10 +41,10 @@ exports.getAllBusinesses = async (req, res) => {
     if (category) {
       whereClause = {
         category: {
-          name: {
-            contains: category,
-            mode: 'insensitive' // case-insensitive match
-          }
+          OR: [
+            { name: { contains: category } },
+            { slug: { contains: category.toLowerCase() } }
+          ]
         }
       };
     }
@@ -267,6 +267,24 @@ exports.getBusinessCustomers = async (req, res) => {
     res.json(Array.from(customersMap.values()));
   } catch (error) {
     console.error('getBusinessCustomers error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+// Get services for a business (public route)
+exports.getBusinessServices = async (req, res) => {
+  try {
+    const businessId = parseInt(req.params.id);
+    const services = await prisma.service.findMany({
+      where: { 
+        business_id: businessId,
+        status: 'ACTIVE'
+      },
+      orderBy: { created_at: 'desc' }
+    });
+    res.json(services);
+  } catch (error) {
+    console.error('getBusinessServices error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };

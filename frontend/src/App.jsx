@@ -18,6 +18,12 @@ import CafeConfirmation from './pages/booking/CafeConfirmation';
 import HotelSearch from './pages/shop/HotelSearch';
 import HotelDetail from './pages/business-pages/HotelDetail';
 import HotelBookingFlow from './pages/booking/HotelBookingFlow';
+import RestaurantSearch from './pages/shop/RestaurantSearch';
+import RestaurantDetail from './pages/business-pages/RestaurantDetail';
+import RestaurantCheckoutFlow from './pages/booking/RestaurantCheckoutFlow';
+import AutoServiceSearch from './pages/shop/AutoServiceSearch';
+import AutoServiceDetail from './pages/business-pages/AutoServiceDetail';
+import AutoCheckoutFlow from './pages/booking/AutoCheckoutFlow';
 import BookingFlow from './pages/booking/BookingFlow';
 import BusinessDashboardLayout from './layouts/BusinessDashboardLayout';
 import DashboardHome from './pages/business-dashboard/DashboardHome';
@@ -30,6 +36,7 @@ import DashboardPharmacyProducts from './pages/business-dashboard/DashboardPharm
 import DashboardCafeMenu from './pages/business-dashboard/DashboardCafeMenu';
 import DashboardCafeTables from './pages/business-dashboard/DashboardCafeTables';
 import DashboardHotelRooms from './pages/business-dashboard/DashboardHotelRooms';
+import DashboardAutoServices from './pages/business-dashboard/DashboardAutoServices';
 import DashboardCustomers from './pages/business-dashboard/DashboardCustomers';
 import DashboardReviews from './pages/business-dashboard/DashboardReviews';
 
@@ -60,6 +67,12 @@ function App() {
           <Route path="business/parking/:id" element={<ParkingDetail />} />
           <Route path="business/cafe/:id" element={<CafeDetail />} />
           <Route path="business/hotel/:id" element={<HotelDetail />} />
+          <Route path="shop/restaurant" element={<RestaurantSearch />} />
+          <Route path="business/restaurant/:id" element={<RestaurantDetail />} />
+          <Route path="checkout/restaurant" element={<RestaurantCheckoutFlow />} />
+          <Route path="shop/auto" element={<AutoServiceSearch />} />
+          <Route path="business/auto/:id" element={<AutoServiceDetail />} />
+          <Route path="checkout/auto" element={<AutoCheckoutFlow />} />
           <Route path="business/pharmacy/product/:id" element={<PharmacyProductDetail />} />
           <Route path="book/:businessId" element={<BookingFlow />} />
           <Route path="booking/parking/success" element={<ParkingConfirmation />} />
@@ -85,6 +98,7 @@ function App() {
           <Route path="cafe-menu" element={<DashboardCafeMenu />} />
           <Route path="cafe-tables" element={<DashboardCafeTables />} />
           <Route path="hotel-rooms" element={<DashboardHotelRooms />} />
+          <Route path="auto-services" element={<DashboardAutoServices />} />
           <Route path="customers" element={<DashboardCustomers />} />
           <Route path="reviews" element={<DashboardReviews />} />
         </Route>
