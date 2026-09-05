@@ -160,6 +160,19 @@ const BusinessDashboardLayout = () => {
             <Link to="/business-dashboard/parking-spaces" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
               🚗 Parking Spaces
             </Link>
+          ) : business?.category?.slug === 'home-repair' ? (
+            <>
+              <Link to="/business-dashboard/repair-services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+                🔧 Services
+              </Link>
+              <Link to="/business-dashboard/repair-jobs" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+                📥 Job Requests
+              </Link>
+            </>
+          ) : business?.category?.slug === 'gym' ? (
+            <Link to="/business-dashboard/gym-services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+              🏋️ Gym Offerings
+            </Link>
           ) : (
             <Link to="/business-dashboard/services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
               🏷️ Services

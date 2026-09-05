@@ -65,6 +65,29 @@ exports.getAllBusinesses = async (req, res) => {
   }
 };
 
+// Get a single business by ID
+exports.getBusinessById = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const business = await prisma.business.findUnique({
+      where: { id },
+      include: {
+        category: true,
+        services: true
+      }
+    });
+
+    if (!business) {
+      return res.status(404).json({ error: 'Business not found.' });
+    }
+
+    res.json(business);
+  } catch (error) {
+    console.error('getBusinessById error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 // Get all businesses for the authenticated owner
 exports.getMyBusinesses = async (req, res) => {

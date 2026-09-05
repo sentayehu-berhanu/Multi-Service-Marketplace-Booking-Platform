@@ -1,5 +1,5 @@
 const express = require('express');
-const { createBusiness, getMyBusinesses, getAllBusinesses, addService, updateService, deleteService, getBusinessCustomers, getCategories, getBusinessServices } = require('../controllers/businessController');
+const { createBusiness, getMyBusinesses, getAllBusinesses, getBusinessById, addService, updateService, deleteService, getBusinessCustomers, getCategories, getBusinessServices } = require('../controllers/businessController');
 const { authenticate, authorize } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
 const staffRoutes = require('./staffRoutes');
@@ -19,6 +19,10 @@ router.get('/categories', getCategories);
 // Only BUSINESS_OWNER or ADMIN can register businesses and view their own dashboard
 router.post('/', authenticate, authorize('BUSINESS_OWNER', 'ADMIN'), createBusiness);
 router.get('/my', authenticate, authorize('BUSINESS_OWNER', 'ADMIN'), getMyBusinesses);
+
+// Public route to get a single business by ID
+router.get('/:id', getBusinessById);
+
 router.post('/:id/services', authenticate, authorize('BUSINESS_OWNER', 'ADMIN'), upload.single('imageFile'), addService);
 router.put('/:id/services/:serviceId', authenticate, authorize('BUSINESS_OWNER', 'ADMIN'), upload.single('imageFile'), updateService);
 router.delete('/:id/services/:serviceId', authenticate, authorize('BUSINESS_OWNER', 'ADMIN'), deleteService);

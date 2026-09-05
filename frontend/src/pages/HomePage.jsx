@@ -62,7 +62,9 @@ const HomePage = () => {
       'Hotel': '/shop/hotel',
       'Restaurant': '/shop/restaurant',
       'Car Wash': '/shop/auto',
-      'Cleaning': '/shop/cleaning'
+      'Cleaning': '/shop/cleaning',
+      'Home Repair': '/shop/repair',
+      'Gym': '/shop/gym'
     };
 
     if (specialRoutes[categoryName]) {

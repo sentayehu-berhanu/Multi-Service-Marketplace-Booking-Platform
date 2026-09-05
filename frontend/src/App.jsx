@@ -42,6 +42,13 @@ import DashboardAutoServices from './pages/business-dashboard/DashboardAutoServi
 import DashboardCustomers from './pages/business-dashboard/DashboardCustomers';
 import DashboardReviews from './pages/business-dashboard/DashboardReviews';
 import DashboardCleaningServices from './pages/business-dashboard/DashboardCleaningServices';
+import DashboardRepairJobs from './pages/business-dashboard/DashboardRepairJobs';
+import DashboardRepairServices from './pages/business-dashboard/DashboardRepairServices';
+import HomeRepair from './pages/shop/HomeRepair';
+import GymSearch from './pages/shop/GymSearch';
+import GymDetail from './pages/business-pages/GymDetail';
+import GymCheckoutFlow from './pages/booking/GymCheckoutFlow';
+import DashboardGymServices from './pages/business-dashboard/DashboardGymServices';
 
 import AdminDashboardLayout from './layouts/AdminDashboardLayout';
 import AdminBusinesses from './pages/admin-dashboard/AdminBusinesses';
@@ -76,6 +83,10 @@ function App() {
           <Route path="shop/auto" element={<AutoServiceSearch />} />
           <Route path="shop/cleaning" element={<CleaningSearch />} />
           <Route path="checkout/cleaning" element={<CleaningCheckoutFlow />} />
+          <Route path="shop/repair" element={<HomeRepair />} />
+          <Route path="shop/gym" element={<GymSearch />} />
+          <Route path="business/gym/:id" element={<GymDetail />} />
+          <Route path="checkout/gym" element={<GymCheckoutFlow />} />
           <Route path="business/auto/:id" element={<AutoServiceDetail />} />
           <Route path="checkout/auto" element={<AutoCheckoutFlow />} />
           <Route path="business/pharmacy/product/:id" element={<PharmacyProductDetail />} />
@@ -105,6 +116,9 @@ function App() {
           <Route path="hotel-rooms" element={<DashboardHotelRooms />} />
           <Route path="auto-services" element={<DashboardAutoServices />} />
           <Route path="cleaning-services" element={<DashboardCleaningServices />} />
+          <Route path="repair-services" element={<DashboardRepairServices />} />
+          <Route path="gym-services" element={<DashboardGymServices />} />
+          <Route path="repair-jobs" element={<DashboardRepairJobs />} />
           <Route path="customers" element={<DashboardCustomers />} />
           <Route path="reviews" element={<DashboardReviews />} />
         </Route>
