@@ -49,6 +49,9 @@ import GymSearch from './pages/shop/GymSearch';
 import GymDetail from './pages/business-pages/GymDetail';
 import GymCheckoutFlow from './pages/booking/GymCheckoutFlow';
 import DashboardGymServices from './pages/business-dashboard/DashboardGymServices';
+import DashboardHealthcareServices from './pages/business-dashboard/DashboardHealthcareServices';
+import HealthcareSearch from './pages/shop/HealthcareSearch';
+import HealthcareDoctorDetail from './pages/business-pages/HealthcareDoctorDetail';
 
 import AdminDashboardLayout from './layouts/AdminDashboardLayout';
 import AdminBusinesses from './pages/admin-dashboard/AdminBusinesses';
@@ -84,6 +87,8 @@ function App() {
           <Route path="shop/cleaning" element={<CleaningSearch />} />
           <Route path="checkout/cleaning" element={<CleaningCheckoutFlow />} />
           <Route path="shop/repair" element={<HomeRepair />} />
+          <Route path="shop/healthcare" element={<HealthcareSearch />} />
+          <Route path="business/doctor/:id" element={<HealthcareDoctorDetail />} />
           <Route path="shop/gym" element={<GymSearch />} />
           <Route path="business/gym/:id" element={<GymDetail />} />
           <Route path="checkout/gym" element={<GymCheckoutFlow />} />
@@ -118,6 +123,7 @@ function App() {
           <Route path="cleaning-services" element={<DashboardCleaningServices />} />
           <Route path="repair-services" element={<DashboardRepairServices />} />
           <Route path="gym-services" element={<DashboardGymServices />} />
+          <Route path="healthcare-services" element={<DashboardHealthcareServices />} />
           <Route path="repair-jobs" element={<DashboardRepairJobs />} />
           <Route path="customers" element={<DashboardCustomers />} />
           <Route path="reviews" element={<DashboardReviews />} />

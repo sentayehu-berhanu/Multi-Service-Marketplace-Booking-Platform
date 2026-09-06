@@ -64,7 +64,8 @@ const HomePage = () => {
       'Car Wash': '/shop/auto',
       'Cleaning': '/shop/cleaning',
       'Home Repair': '/shop/repair',
-      'Gym': '/shop/gym'
+      'Gym': '/shop/gym',
+      'Healthcare': '/shop/healthcare'
     };
 
     if (specialRoutes[categoryName]) {
