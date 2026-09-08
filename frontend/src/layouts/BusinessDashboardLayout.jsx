@@ -181,6 +181,10 @@ const BusinessDashboardLayout = () => {
             <Link to="/business-dashboard/spa-services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
               💆 Spa Services
             </Link>
+          ) : business?.category?.slug === 'tutors' ? (
+            <Link to="/business-dashboard/tutor-programs" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+              🎓 Programs
+            </Link>
           ) : (
             <Link to="/business-dashboard/services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
               🏷️ Services

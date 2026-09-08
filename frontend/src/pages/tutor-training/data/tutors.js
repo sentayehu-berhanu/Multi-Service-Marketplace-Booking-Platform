@@ -1,0 +1,53 @@
+export const tutors = [
+  {
+    id: 1,
+    name: "Sarah Johnson",
+    subject: "English Tutor",
+    category: "language",
+    rating: 4.9,
+    students: 150,
+    experience: 6,
+    price: 300,
+    currency: "ETB",
+    modes: ["online", "physical"],
+    availability: ["Monday", "Wednesday", "Friday"],
+    languages: ["English", "Amharic"],
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+    location: "Bole, Addis Ababa",
+    bio: "Experienced English tutor helping students improve speaking, writing and communication skills."
+  },
+  {
+    id: 2,
+    name: "Michael Bekele",
+    subject: "Computer Programming",
+    category: "computer",
+    rating: 4.8,
+    students: 96,
+    experience: 5,
+    price: 500,
+    currency: "ETB",
+    modes: ["online", "physical"],
+    availability: ["Tuesday", "Thursday", "Saturday"],
+    languages: ["English", "Amharic"],
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+    location: "Addis Ababa",
+    bio: "Software developer and programming instructor specializing in web development."
+  },
+  {
+    id: 3,
+    name: "Hana Alemu",
+    subject: "Mathematics",
+    category: "academic",
+    rating: 5.0,
+    students: 210,
+    experience: 8,
+    price: 400,
+    currency: "ETB",
+    modes: ["physical"],
+    availability: ["Monday", "Tuesday", "Wednesday"],
+    languages: ["Amharic"],
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+    location: "Piassa, Addis Ababa",
+    bio: "Passionate math teacher making complex concepts easy to understand for high school students."
+  }
+];

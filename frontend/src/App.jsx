@@ -50,6 +50,7 @@ import GymDetail from './pages/business-pages/GymDetail';
 import GymCheckoutFlow from './pages/booking/GymCheckoutFlow';
 import DashboardGymServices from './pages/business-dashboard/DashboardGymServices';
 import DashboardHealthcareServices from './pages/business-dashboard/DashboardHealthcareServices';
+import DashboardTutorServices from './pages/business-dashboard/DashboardTutorServices';
 import DashboardSpaServices from './pages/business-dashboard/DashboardSpaServices';
 import HealthcareSearch from './pages/shop/HealthcareSearch';
 import HealthcareDoctorDetail from './pages/business-pages/HealthcareDoctorDetail';
@@ -64,6 +65,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import CustomerBookings from './pages/CustomerBookings';
 import Profile from './pages/Profile';
+import TutorTraining from './pages/tutor-training/TutorTraining';
 
 function App() {
   return (
@@ -108,6 +110,7 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="my-bookings" element={<CustomerBookings />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="shop/tutors" element={<TutorTraining />} />
         </Route>
 
         {/* Business Dashboard Routes */}
@@ -128,6 +131,7 @@ function App() {
           <Route path="gym-services" element={<DashboardGymServices />} />
           <Route path="healthcare-services" element={<DashboardHealthcareServices />} />
           <Route path="spa-services" element={<DashboardSpaServices />} />
+          <Route path="tutor-programs" element={<DashboardTutorServices />} />
           <Route path="repair-jobs" element={<DashboardRepairJobs />} />
           <Route path="customers" element={<DashboardCustomers />} />
           <Route path="reviews" element={<DashboardReviews />} />
