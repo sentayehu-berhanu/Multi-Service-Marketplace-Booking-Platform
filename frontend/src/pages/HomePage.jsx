@@ -67,7 +67,8 @@ const HomePage = () => {
       'Gym': '/shop/gym',
       'Healthcare': '/shop/healthcare',
       'Spa': '/shop/spa',
-      'Tutors': '/shop/tutors'
+      'Tutors': '/shop/tutors',
+      'Transportation': '/shop/transportation'
     };
 
     if (specialRoutes[categoryName]) {

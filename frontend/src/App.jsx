@@ -52,9 +52,11 @@ import DashboardGymServices from './pages/business-dashboard/DashboardGymService
 import DashboardHealthcareServices from './pages/business-dashboard/DashboardHealthcareServices';
 import DashboardTutorServices from './pages/business-dashboard/DashboardTutorServices';
 import DashboardSpaServices from './pages/business-dashboard/DashboardSpaServices';
+import DashboardTransportationServices from './pages/business-dashboard/DashboardTransportationServices';
 import HealthcareSearch from './pages/shop/HealthcareSearch';
 import HealthcareDoctorDetail from './pages/business-pages/HealthcareDoctorDetail';
 import SpaBooking from './pages/shop/SpaBooking';
+import Transportation from './pages/transportation/Transportation';
 
 import AdminDashboardLayout from './layouts/AdminDashboardLayout';
 import AdminBusinesses from './pages/admin-dashboard/AdminBusinesses';
@@ -79,6 +81,7 @@ function App() {
           <Route path="shop/barber" element={<BarberShop />} />
           <Route path="shop/parking" element={<ParkingShop />} />
           <Route path="shop/pharmacy" element={<PharmacyShop />} />
+          <Route path="shop/transportation" element={<Transportation />} />
           <Route path="business/barber/:id" element={<BarberDetail />} />
           <Route path="business/salon/:id" element={<WomensSalonPage />} />
           <Route path="business/parking/:id" element={<ParkingDetail />} />
@@ -132,6 +135,7 @@ function App() {
           <Route path="healthcare-services" element={<DashboardHealthcareServices />} />
           <Route path="spa-services" element={<DashboardSpaServices />} />
           <Route path="tutor-programs" element={<DashboardTutorServices />} />
+          <Route path="transportation-services" element={<DashboardTransportationServices />} />
           <Route path="repair-jobs" element={<DashboardRepairJobs />} />
           <Route path="customers" element={<DashboardCustomers />} />
           <Route path="reviews" element={<DashboardReviews />} />

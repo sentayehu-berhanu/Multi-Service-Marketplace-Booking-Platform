@@ -185,6 +185,10 @@ const BusinessDashboardLayout = () => {
             <Link to="/business-dashboard/tutor-programs" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
               🎓 Programs
             </Link>
+          ) : business?.category?.slug === 'transportation' ? (
+            <Link to="/business-dashboard/transportation-services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+              🚕 Fleet & Services
+            </Link>
           ) : (
             <Link to="/business-dashboard/services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
               🏷️ Services
