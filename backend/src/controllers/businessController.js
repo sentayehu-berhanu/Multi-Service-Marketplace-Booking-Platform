@@ -53,7 +53,8 @@ exports.getAllBusinesses = async (req, res) => {
       where: whereClause,
       include: {
         category: true,
-        services: true
+        services: { where: { status: 'ACTIVE' } },
+        products: { where: { status: 'ACTIVE' } }
       },
       orderBy: { created_at: 'desc' }
     });
@@ -73,7 +74,8 @@ exports.getBusinessById = async (req, res) => {
       where: { id },
       include: {
         category: true,
-        services: true
+        services: { where: { status: 'ACTIVE' } },
+        products: { where: { status: 'ACTIVE' } }
       }
     });
 

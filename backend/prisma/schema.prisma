@@ -69,6 +69,7 @@ model Business {
   orders       Order[]
   coupons      Coupon[]
   gallery      GalleryImage[]
+  events       Event[]
 
   @@index([category_id])
   @@index([location_lat, location_lng])
@@ -264,5 +265,23 @@ model Notification {
   type       String   @default("SYSTEM") // SYSTEM, BOOKING, REVIEW, MESSAGE
   is_read    Boolean  @default(false)
   created_at DateTime @default(now())
+}
+
+model Event {
+  id          Int       @id @default(autoincrement())
+  business_id Int
+  business    Business  @relation(fields: [business_id], references: [id])
+  title       String
+  description String?
+  category    String
+  date        String
+  time        String
+  venue       String
+  city        String
+  price       Float
+  image       String?
+  status      String    @default("ACTIVE")
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
 }
 

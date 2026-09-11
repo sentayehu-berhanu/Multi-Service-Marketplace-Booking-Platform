@@ -12,10 +12,18 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      const user = res.data.user;
       localStorage.setItem('token', res.data.tokens.accessToken);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
+      localStorage.setItem('user', JSON.stringify(user));
       alert('Login successful');
-      navigate('/');
+      
+      if (user.role === 'BUSINESS_OWNER') {
+        navigate('/business-dashboard');
+      } else if (user.role === 'ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     } catch (error) {
       alert('Login failed: ' + (error.response?.data?.error || error.response?.data?.message || error.message));
     }

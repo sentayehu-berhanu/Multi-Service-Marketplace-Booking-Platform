@@ -189,6 +189,19 @@ const BusinessDashboardLayout = () => {
             <Link to="/business-dashboard/transportation-services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
               🚕 Fleet & Services
             </Link>
+          ) : business?.category?.slug === 'local-delivery' ? (
+            <>
+              <Link to="/business-dashboard/delivery-orders" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+                📦 Delivery Orders
+              </Link>
+              <Link to="/business-dashboard/delivery-products" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+                🛒 Manage Products
+              </Link>
+            </>
+          ) : business?.category?.slug === 'events-tickets' ? (
+            <Link to="/business-dashboard/events-management" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
+              🎟️ Manage Events
+            </Link>
           ) : (
             <Link to="/business-dashboard/services" className="hover-scale" style={{ padding: '10px 15px', borderRadius: '10px', color: 'var(--text-secondary)' }}>
               🏷️ Services

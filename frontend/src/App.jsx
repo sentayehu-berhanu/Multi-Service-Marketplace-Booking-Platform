@@ -53,6 +53,9 @@ import DashboardHealthcareServices from './pages/business-dashboard/DashboardHea
 import DashboardTutorServices from './pages/business-dashboard/DashboardTutorServices';
 import DashboardSpaServices from './pages/business-dashboard/DashboardSpaServices';
 import DashboardTransportationServices from './pages/business-dashboard/DashboardTransportationServices';
+import DashboardDeliveryOrders from './pages/business-dashboard/DashboardDeliveryOrders';
+import DashboardDeliveryProducts from './pages/business-dashboard/DashboardDeliveryProducts';
+import DashboardEventsManagement from './pages/business-dashboard/DashboardEventsManagement';
 import HealthcareSearch from './pages/shop/HealthcareSearch';
 import HealthcareDoctorDetail from './pages/business-pages/HealthcareDoctorDetail';
 import SpaBooking from './pages/shop/SpaBooking';
@@ -68,6 +71,8 @@ import Register from './pages/Register';
 import CustomerBookings from './pages/CustomerBookings';
 import Profile from './pages/Profile';
 import TutorTraining from './pages/tutor-training/TutorTraining';
+import LocalDelivery from './pages/delivery/LocalDelivery';
+import Events from './pages/events/Events';
 
 function App() {
   return (
@@ -114,6 +119,8 @@ function App() {
           <Route path="my-bookings" element={<CustomerBookings />} />
           <Route path="profile" element={<Profile />} />
           <Route path="shop/tutors" element={<TutorTraining />} />
+          <Route path="delivery" element={<LocalDelivery />} />
+          <Route path="events" element={<Events />} />
         </Route>
 
         {/* Business Dashboard Routes */}
@@ -136,6 +143,9 @@ function App() {
           <Route path="spa-services" element={<DashboardSpaServices />} />
           <Route path="tutor-programs" element={<DashboardTutorServices />} />
           <Route path="transportation-services" element={<DashboardTransportationServices />} />
+          <Route path="delivery-orders" element={<DashboardDeliveryOrders />} />
+          <Route path="delivery-products" element={<DashboardDeliveryProducts />} />
+          <Route path="events-management" element={<DashboardEventsManagement />} />
           <Route path="repair-jobs" element={<DashboardRepairJobs />} />
           <Route path="customers" element={<DashboardCustomers />} />
           <Route path="reviews" element={<DashboardReviews />} />
