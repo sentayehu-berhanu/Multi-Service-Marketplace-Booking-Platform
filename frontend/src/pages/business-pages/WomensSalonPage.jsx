@@ -15,8 +15,15 @@ const WomensSalonPage = () => {
   const navigate = useNavigate();
   const [biz, setBiz] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState('Hair');
-  const [selectedExpert, setSelectedExpert] = useState(null);
+  const [activeTab, setActiveTab] = useState('Services');
+
+  // Booking Form State
+  const [selectedService, setSelectedService] = useState('Hair Styling');
+  const [selectedExpert, setSelectedExpert] = useState('Sara');
+  const [selectedDate, setSelectedDate] = useState('May 21, 2024');
+  const [selectedTime, setSelectedTime] = useState('11:00 AM');
+
+  const TABS = ['Overview', 'Services', 'Experts', 'Reviews', 'Gallery'];
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -57,136 +64,201 @@ const WomensSalonPage = () => {
   ];
 
   return (
-    <div style={{ background: '#faf5f7', minHeight: '100vh', color: '#333', fontFamily: "'Playfair Display', serif" }}>
-      {/* Soft Header */}
-      <div style={{ height: '450px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ 
-          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, 
-          background: `url(${displayBiz.cover_image}) center/cover no-repeat`,
-          filter: 'brightness(0.8)'
-        }} />
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '300px', background: 'linear-gradient(to top, #faf5f7, transparent)' }} />
-        
-        <div className="container" style={{ position: 'absolute', bottom: '40px', left: '0', right: '0', padding: '0 24px' }}>
-          <h1 style={{ fontSize: '4rem', margin: '0 0 10px 0', color: '#1a1a1a', textShadow: '2px 2px 4px rgba(255,255,255,0.5)' }}>
-            {displayBiz.name}
-          </h1>
-          <div style={{ display: 'flex', gap: '2rem', color: '#4a4a4a', alignItems: 'center', fontSize: '1.2rem', fontWeight: 'bold' }}>
-            <span style={{ color: '#d97706' }}>⭐ {displayBiz.rating}</span>
-            <span>📍 {displayBiz.address}</span>
-            <span style={{ color: '#059669', background: '#d1fae5', padding: '4px 12px', borderRadius: '20px', fontSize: '1rem' }}>🟢 Open</span>
-          </div>
-        </div>
+    <div style={{ background: '#f4f7fb', minHeight: '100vh', fontFamily: "'Inter', sans-serif", padding: '2rem' }}>
+      
+      {/* Top Header */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <div style={{ fontSize: '2rem', color: '#e11d48' }}>👩🏼</div>
+        <h1 style={{ fontSize: '1.2rem', color: '#0f172a', margin: 0, fontWeight: '800', letterSpacing: '0.5px' }}>BOOKING - SALON</h1>
       </div>
 
-      <div className="container" style={{ padding: '2rem 24px 5rem 24px' }}>
+      {/* Main Container Card */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', background: 'white', borderRadius: '20px', padding: '2rem', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
         
-        {/* Large Gallery */}
-        <div style={{ marginBottom: '4rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '15px', height: '300px' }}>
-            <div style={{ background: `url(${displayBiz.images ? displayBiz.images[0] : 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3'}) center/cover`, borderRadius: '15px 0 0 15px' }} />
-            <div style={{ background: `url(${displayBiz.images ? displayBiz.images[1] : 'https://images.unsplash.com/photo-1596704017254-9b121068fb31?ixlib=rb-4.0.3'}) center/cover` }} />
-            <div style={{ background: `url(${displayBiz.images ? displayBiz.images[2] : 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?ixlib=rb-4.0.3'}) center/cover`, borderRadius: '0 15px 15px 0' }} />
+        {/* Business Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
+          <div>
+            <h2 style={{ fontSize: '1.8rem', margin: '0 0 10px 0', color: '#0f172a' }}>{displayBiz.name || 'Glow Beauty Salon'}</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', color: '#64748b' }}>
+              <span style={{ color: '#f59e0b', fontWeight: 'bold' }}>⭐ {displayBiz.rating || '4.7'}</span>
+              <span>({displayBiz.reviews?.length || 189} reviews)</span>
+              <span>•</span>
+              <span style={{ color: '#059669', fontWeight: 'bold' }}>Open Now</span>
+              <span>•</span>
+              <span>📍 {displayBiz.distance || '1.2 km'} - {displayBiz.location || displayBiz.address || 'Kazanchis, Addis Ababa'}</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '15px' }}>
+            <button style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>♡</button>
+            <button style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>📤</button>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '4rem' }}>
+        {/* Content Layout */}
+        <div style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
           
-          {/* Left Column: Categories and Services */}
-          <div style={{ flex: '1 1 65%' }}>
+          {/* Left Column */}
+          <div style={{ flex: '1 1 600px' }}>
             
-            {/* Category Tabs */}
-            <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '1.5rem', marginBottom: '2rem', borderBottom: '1px solid #e5e7eb', scrollbarWidth: 'none' }}>
-              {CATEGORIES.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  style={{
-                    background: activeCategory === cat ? '#f472b6' : 'transparent',
-                    border: 'none',
-                    color: activeCategory === cat ? 'white' : '#6b7280',
-                    padding: '8px 20px',
-                    borderRadius: '25px',
-                    fontSize: '1.1rem',
-                    fontWeight: activeCategory === cat ? 'bold' : 'normal',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    whiteSpace: 'nowrap'
+            {/* Gallery */}
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '1.5rem' }}>
+              <div style={{ flex: 1, height: '150px', background: `url(${displayBiz.images?.[0] || 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&w=400&q=80'}) center/cover`, borderRadius: '12px' }}></div>
+              <div style={{ flex: 1, height: '150px', background: `url(${displayBiz.images?.[1] || 'https://images.unsplash.com/photo-1596704017254-9b121068fb31?ixlib=rb-4.0.3&w=400&q=80'}) center/cover`, borderRadius: '12px' }}></div>
+              <div style={{ flex: 1, height: '150px', background: `url(${displayBiz.images?.[2] || 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?ixlib=rb-4.0.3&w=400&q=80'}) center/cover`, borderRadius: '12px' }}></div>
+            </div>
+
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: '2rem', borderBottom: '1px solid #e2e8f0', marginBottom: '2rem' }}>
+              {TABS.map(tab => (
+                <button 
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  style={{ 
+                    background: 'none', border: 'none', padding: '10px 0', 
+                    fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer',
+                    color: activeTab === tab ? '#e11d48' : '#64748b',
+                    borderBottom: activeTab === tab ? '3px solid #e11d48' : '3px solid transparent',
+                    marginBottom: '-1px'
                   }}
-                >
-                  {cat}
-                </button>
+                >{tab}</button>
               ))}
             </div>
 
-            <h2 style={{ fontSize: '2.5rem', marginBottom: '2rem', color: '#1f2937' }}>Popular Services</h2>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-              {POPULAR_SERVICES.map(service => (
-                <div key={service.id} style={{ 
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-                  padding: '1.5rem 2rem', background: 'white', borderRadius: '15px', 
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
-                }}>
-                  <h3 style={{ margin: 0, fontSize: '1.4rem', color: '#374151' }}>{service.name}</h3>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#db2777' }}>
-                    {service.price} ETB
+            {/* Tab Content */}
+            {activeTab === 'Services' && (
+              <div>
+                <h3 style={{ fontSize: '1.2rem', color: '#0f172a', marginBottom: '1.5rem', fontWeight: 'bold' }}>Our Services</h3>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  {/* Service Card 1 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '15px' }}>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'url(https://images.unsplash.com/photo-1560066984-138dadb4c035?w=100) center/cover' }}></div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '0.95rem' }}>Hair Styling</div>
+                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>45 min</div>
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 'bold', color: '#0f172a' }}>500 ETB</div>
+                  </div>
+                  {/* Service Card 2 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '15px' }}>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'url(https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=100) center/cover' }}></div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '0.95rem' }}>Makeup</div>
+                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>60 min</div>
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 'bold', color: '#0f172a' }}>600 ETB</div>
+                  </div>
+                  {/* Service Card 3 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '15px' }}>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'url(https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=100) center/cover' }}></div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '0.95rem' }}>Hair Coloring</div>
+                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>90 min</div>
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 'bold', color: '#0f172a' }}>800 ETB</div>
+                  </div>
+                  {/* Service Card 4 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '15px' }}>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'url(https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=100) center/cover' }}></div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '0.95rem' }}>Manicure</div>
+                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>30 min</div>
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 'bold', color: '#0f172a' }}>300 ETB</div>
+                  </div>
+                  {/* Service Card 5 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '15px' }}>
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'url(https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=100) center/cover' }}></div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '0.95rem' }}>Pedicure</div>
+                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>45 min</div>
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 'bold', color: '#0f172a' }}>350 ETB</div>
                   </div>
                 </div>
-              ))}
-            </div>
-            
+              </div>
+            )}
+            {activeTab !== 'Services' && <div style={{ color: '#64748b' }}>{activeTab} content...</div>}
           </div>
 
-          {/* Right Column: Experts & Booking */}
-          <div style={{ flex: '1 1 35%' }}>
-            <div style={{ background: 'white', padding: '2.5rem', borderRadius: '20px', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)', position: 'sticky', top: '100px' }}>
+          {/* Right Column (Widget) */}
+          <div style={{ flex: '1 1 350px' }}>
+            <div style={{ background: '#f8fafc', borderRadius: '15px', padding: '2rem', border: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: '1.2rem', color: '#0f172a', marginBottom: '1.5rem', fontWeight: 'bold' }}>Book Appointment</h3>
               
-              <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem', textAlign: 'center', color: '#1f2937' }}>Choose Expert</h2>
-              
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3rem' }}>
-                {EXPERTS.map(expert => (
-                  <div 
-                    key={expert.id} 
-                    onClick={() => setSelectedExpert(expert)}
-                    style={{ 
-                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px',
-                      cursor: 'pointer', opacity: selectedExpert?.id === expert.id ? 1 : 0.6,
-                      transform: selectedExpert?.id === expert.id ? 'scale(1.1)' : 'scale(1)',
-                      transition: 'all 0.3s ease'
-                    }}
-                  >
-                    <div style={{ 
-                      width: '80px', height: '80px', borderRadius: '50%', background: '#fce7f3', 
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2.5rem',
-                      border: selectedExpert?.id === expert.id ? '3px solid #f472b6' : '3px solid transparent'
-                    }}>
-                      {expert.avatar}
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.1rem', color: '#1f2937' }}>{expert.name}</div>
-                      <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>{expert.role}</div>
-                    </div>
-                  </div>
-                ))}
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Select Service</label>
+                <div style={{ position: 'relative' }}>
+                  <select value={selectedService} onChange={e => setSelectedService(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', outline: 'none', appearance: 'none', fontWeight: '500', color: '#0f172a' }}>
+                    <option>Hair Styling</option>
+                    <option>Makeup</option>
+                    <option>Hair Coloring</option>
+                    <option>Manicure</option>
+                    <option>Pedicure</option>
+                  </select>
+                  <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b', fontSize: '0.8rem' }}>▼</div>
+                </div>
               </div>
 
-              <button 
-                onClick={() => navigate(`/book/${displayBiz.id}`)}
-                style={{ 
-                  width: '100%', padding: '18px', background: '#db2777', color: 'white', 
-                  border: 'none', borderRadius: '30px', fontSize: '1.2rem', fontWeight: 'bold',
-                  cursor: 'pointer', boxShadow: '0 4px 14px 0 rgba(219, 39, 119, 0.39)',
-                  transition: 'background 0.3s'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.background = '#be185d'}
-                onMouseOut={(e) => e.currentTarget.style.background = '#db2777'}
-              >
-                BOOK APPOINTMENT
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Select Expert</label>
+                <div style={{ position: 'relative' }}>
+                  <select value={selectedExpert} onChange={e => setSelectedExpert(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', outline: 'none', appearance: 'none', fontWeight: '500', color: '#0f172a' }}>
+                    <option>Sara</option>
+                    <option>Mimi</option>
+                    <option>Hana</option>
+                  </select>
+                  <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b', fontSize: '0.8rem' }}>▼</div>
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Select Date</label>
+                <input type="text" value={selectedDate} onChange={e => setSelectedDate(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', outline: 'none', fontWeight: '500', color: '#0f172a' }} />
+              </div>
+
+              <div style={{ marginBottom: '2rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Select Time</label>
+                <div style={{ position: 'relative' }}>
+                  <select value={selectedTime} onChange={e => setSelectedTime(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', outline: 'none', appearance: 'none', fontWeight: '500', color: '#0f172a' }}>
+                    <option>10:00 AM</option>
+                    <option>11:00 AM</option>
+                    <option>12:00 PM</option>
+                  </select>
+                  <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b', fontSize: '0.8rem' }}>▼</div>
+                </div>
+              </div>
+
+              <button style={{ width: '100%', padding: '14px', background: '#e11d48', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', marginBottom: '1.5rem', boxShadow: '0 4px 6px -1px rgba(225, 29, 72, 0.4)' }}>
+                Continue
               </button>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '5px' }}>
+                <span style={{ color: '#475569' }}>Open Hours</span>
+                <span style={{ color: '#0f172a', fontWeight: '500' }}></span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#64748b', marginBottom: '1rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+                <span>Mon - Sun</span>
+                <span>8:00 AM - 8:00 PM</span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginTop: '10px' }}>
+                <span style={{ color: '#475569' }}>Contact</span>
+                <span style={{ color: '#0f172a', fontWeight: '500' }}>+251 91 987 6543</span>
+              </div>
             </div>
           </div>
-          
+
         </div>
       </div>
     </div>

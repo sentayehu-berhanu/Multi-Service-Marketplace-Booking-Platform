@@ -578,3 +578,9 @@ input:checked + .slider:before {
   border-color: rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
+
+/* Map Dark Mode */
+.dark-map-tiles {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+

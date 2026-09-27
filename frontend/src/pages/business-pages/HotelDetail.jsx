@@ -16,6 +16,12 @@ const HotelDetail = () => {
   const [business, setBusiness] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Booking Form State
+  const [selectedRoom, setSelectedRoom] = useState('Deluxe Room');
+  const [checkInDate, setCheckInDate] = useState('May 21, 2024');
+  const [checkOutDate, setCheckOutDate] = useState('May 23, 2024');
+  const [guests, setGuests] = useState('2 Adults');
+
   // MOCK ROOMS (Since backend Services table doesn't have all room-specific details like beds/views, we mock for UI completeness. 
   // In a real app, this would be fetched from business.services)
   const [rooms, setRooms] = useState([
@@ -109,108 +115,129 @@ const HotelDetail = () => {
   if (!business) return <div style={{ textAlign: 'center', padding: '4rem' }}>Hotel not found</div>;
 
   return (
-    <div style={{ background: '#f8fafc', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
+    <div style={{ background: '#f4f7fb', minHeight: '100vh', fontFamily: "'Inter', sans-serif", padding: '2rem' }}>
       
-      {/* Header Info */}
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 24px 1rem 24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div>
-            <h1 style={{ fontSize: '2.5rem', margin: '0 0 10px 0', color: '#0f172a' }}>{business.name}</h1>
-            <div style={{ color: '#64748b', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <span>📍 {business.address || business.location || 'Addis Ababa'}</span>
-              <span style={{ color: '#2563eb', fontWeight: 'bold' }}>⭐ {business.rating || '4.6'}</span>
+      {/* Top Header */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <div style={{ fontSize: '2rem', color: '#8b5cf6' }}>🛏️</div>
+        <h1 style={{ fontSize: '1.2rem', color: '#0f172a', margin: 0, fontWeight: '800', letterSpacing: '0.5px' }}>RESERVATION - HOTEL</h1>
+      </div>
+
+      {/* Main Container Card */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', background: 'white', borderRadius: '20px', padding: '2rem', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+        
+        {/* Business Header with inline image */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '2rem' }}>
+          <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+            <div style={{ width: '120px', height: '80px', borderRadius: '12px', background: `url(${business.gallery?.[0] || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&w=400&q=80'}) center/cover` }}></div>
+            <div>
+              <h2 style={{ fontSize: '1.8rem', margin: '0 0 10px 0', color: '#0f172a' }}>{business.name || 'Grand Hotel'}</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', color: '#64748b' }}>
+                <span style={{ color: '#f59e0b', fontWeight: 'bold' }}>⭐ {business.rating || '4.8'}</span>
+                <span>({business.reviews?.length || 115} reviews)</span>
+                <span>•</span>
+                <span style={{ color: '#059669', fontWeight: 'bold' }}>Open Now</span>
+                <span>•</span>
+                <span>📍 {business.distance || '2.2 km'} - {business.location || business.address || 'Bole Road, Addis Ababa'}</span>
+              </div>
             </div>
           </div>
-          <button style={{ background: 'white', border: '1px solid #cbd5e1', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', color: '#0f172a' }}>
-            ♡ Save
-          </button>
+          <div style={{ display: 'flex', gap: '15px' }}>
+            <button style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>♡</button>
+            <button style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>📤</button>
+          </div>
         </div>
-      </div>
 
-      {/* Gallery Grid */}
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px 2rem 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: '200px 200px', gap: '10px', borderRadius: '20px', overflow: 'hidden' }}>
-          <div style={{ gridRow: '1 / 3', background: `url(${business.gallery[0]}) center/cover no-repeat` }}></div>
-          <div style={{ background: `url(${business.gallery[1]}) center/cover no-repeat` }}></div>
-          <div style={{ background: `url(${business.gallery[2]}) center/cover no-repeat` }}></div>
-        </div>
-      </div>
-
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px 4rem 24px', display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-        
-        {/* Left: Rooms */}
-        <div style={{ flex: '1 1 700px' }}>
-          <h2 style={{ fontSize: '1.8rem', color: '#0f172a', marginBottom: '1.5rem' }}>Available Rooms</h2>
+        {/* Content Layout */}
+        <div style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {rooms.map(room => (
-              <div key={room.id} style={{ display: 'flex', background: 'white', borderRadius: '15px', overflow: 'hidden', border: '1px solid #e2e8f0', flexWrap: 'wrap' }}>
-                <div style={{ width: '250px', background: `url(${room.image}) center/cover no-repeat`, minHeight: '200px' }}></div>
-                
-                <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                  <h3 style={{ fontSize: '1.5rem', margin: '0 0 15px 0', color: '#0f172a' }}>{room.name}</h3>
-                  
-                  <div style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#475569', fontSize: '0.9rem' }}>
-                      <span>🛏️</span> {room.beds}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#475569', fontSize: '0.9rem' }}>
-                      <span>👤</span> Max {room.capacity} Guests
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#475569', fontSize: '0.9rem' }}>
-                      <span>🖼️</span> {room.view}
-                    </div>
-                  </div>
+          {/* Left Column - Select Room */}
+          <div style={{ flex: '1 1 600px' }}>
+            <h3 style={{ fontSize: '1.2rem', color: '#0f172a', marginBottom: '1.5rem', fontWeight: 'bold' }}>Select Room</h3>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {/* Room 1 */}
+              <div 
+                onClick={() => setSelectedRoom('Standard Room')}
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: selectedRoom === 'Standard Room' ? '2px solid #8b5cf6' : '1px solid #e2e8f0', borderRadius: '12px', padding: '15px', cursor: 'pointer', background: selectedRoom === 'Standard Room' ? '#f5f3ff' : 'white' }}
+              >
+                <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                  <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: selectedRoom === 'Standard Room' ? '6px solid #8b5cf6' : '2px solid #cbd5e1', background: 'white' }}></div>
+                  <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1rem' }}>Standard Room</div>
+                </div>
+                <div style={{ color: '#64748b', fontSize: '1rem' }}>1,500 ETB <span style={{ fontSize: '0.85rem' }}>/ Night</span></div>
+              </div>
 
-                  <ul style={{ margin: '0 0 20px 0', paddingLeft: '20px', color: '#64748b', fontSize: '0.9rem', lineHeight: '1.6' }}>
-                    <li>Free cancellation before {checkInParam || 'check-in'}</li>
-                    <li>Breakfast included</li>
-                  </ul>
+              {/* Room 2 */}
+              <div 
+                onClick={() => setSelectedRoom('Deluxe Room')}
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: selectedRoom === 'Deluxe Room' ? '2px solid #8b5cf6' : '1px solid #e2e8f0', borderRadius: '12px', padding: '15px', cursor: 'pointer', background: selectedRoom === 'Deluxe Room' ? '#f5f3ff' : 'white' }}
+              >
+                <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                  <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: selectedRoom === 'Deluxe Room' ? '6px solid #8b5cf6' : '2px solid #cbd5e1', background: 'white' }}></div>
+                  <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1rem' }}>Deluxe Room</div>
+                </div>
+                <div style={{ color: '#64748b', fontSize: '1rem' }}>3,000 ETB <span style={{ fontSize: '0.85rem' }}>/ Night</span></div>
+              </div>
 
-                  <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                    <div>
-                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#0f172a' }}>{room.price} ETB</div>
-                      <div style={{ color: '#64748b', fontSize: '0.9rem' }}>per night</div>
-                    </div>
-                    <button 
-                      onClick={() => handleBookRoom(room)}
-                      style={{ background: '#2563eb', color: 'white', border: 'none', padding: '12px 25px', borderRadius: '8px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer' }}
-                    >
-                      Book Room
-                    </button>
-                  </div>
+              {/* Room 3 */}
+              <div 
+                onClick={() => setSelectedRoom('Suite Room')}
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: selectedRoom === 'Suite Room' ? '2px solid #8b5cf6' : '1px solid #e2e8f0', borderRadius: '12px', padding: '15px', cursor: 'pointer', background: selectedRoom === 'Suite Room' ? '#f5f3ff' : 'white' }}
+              >
+                <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                  <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: selectedRoom === 'Suite Room' ? '6px solid #8b5cf6' : '2px solid #cbd5e1', background: 'white' }}></div>
+                  <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1rem' }}>Suite Room</div>
+                </div>
+                <div style={{ color: '#64748b', fontSize: '1rem' }}>6,000 ETB <span style={{ fontSize: '0.85rem' }}>/ Night</span></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Booking Details */}
+          <div style={{ flex: '1 1 350px' }}>
+            <div style={{ background: '#f8fafc', borderRadius: '15px', padding: '2rem', border: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: '1.2rem', color: '#0f172a', marginBottom: '1.5rem', fontWeight: 'bold' }}>Booking Details</h3>
+              
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Check-in</label>
+                <input type="text" value={checkInDate} onChange={e => setCheckInDate(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', outline: 'none', fontWeight: '500', color: '#0f172a' }} />
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Check-out</label>
+                <input type="text" value={checkOutDate} onChange={e => setCheckOutDate(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', outline: 'none', fontWeight: '500', color: '#0f172a' }} />
+              </div>
+
+              <div style={{ marginBottom: '2rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Guests</label>
+                <div style={{ position: 'relative' }}>
+                  <select value={guests} onChange={e => setGuests(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', outline: 'none', appearance: 'none', fontWeight: '500', color: '#0f172a' }}>
+                    <option>1 Adult</option>
+                    <option>2 Adults</option>
+                    <option>2 Adults, 1 Child</option>
+                  </select>
+                  <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b', fontSize: '0.8rem' }}>▼</div>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Right: Booking Summary / Sticky Box */}
-        <div style={{ flex: '1 1 350px' }}>
-          <div style={{ background: 'white', padding: '2rem', borderRadius: '15px', border: '1px solid #e2e8f0', position: 'sticky', top: '2rem' }}>
-            <h3 style={{ margin: '0 0 1.5rem 0', fontSize: '1.2rem', color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>Your Search Details</h3>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-              <span style={{ color: '#64748b' }}>Check-in</span>
-              <span style={{ fontWeight: 'bold', color: '#0f172a' }}>{checkInParam || 'Not selected'}</span>
-            </div>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-              <span style={{ color: '#64748b' }}>Check-out</span>
-              <span style={{ fontWeight: 'bold', color: '#0f172a' }}>{checkOutParam || 'Not selected'}</span>
-            </div>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-              <span style={{ color: '#64748b' }}>Guests</span>
-              <span style={{ fontWeight: 'bold', color: '#0f172a' }}>{guestsParam || 1} Guests</span>
-            </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingTop: '10px', borderTop: '1px solid #e2e8f0' }}>
+                <span style={{ fontSize: '1.1rem', color: '#475569', fontWeight: '500' }}>Total Price</span>
+                <span style={{ fontSize: '1.3rem', color: '#0f172a', fontWeight: 'bold' }}>5,000 ETB</span>
+              </div>
 
-            <div style={{ background: '#f1f5f9', padding: '1rem', borderRadius: '8px', fontSize: '0.9rem', color: '#475569', textAlign: 'center' }}>
-              Select a room on the left to proceed with booking.
+              <button style={{ width: '100%', padding: '14px', background: '#8b5cf6', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', marginBottom: '1.5rem', boxShadow: '0 4px 6px -1px rgba(139, 92, 246, 0.4)' }}>
+                Book Now
+              </button>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginTop: '10px' }}>
+                <span style={{ color: '#475569' }}>Contact</span>
+                <span style={{ color: '#0f172a', fontWeight: '500' }}>+251 91 222 3344</span>
+              </div>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
   );

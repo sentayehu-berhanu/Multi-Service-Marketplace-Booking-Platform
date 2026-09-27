@@ -30,7 +30,7 @@ const HomeRepair = () => {
 
     try {
       const token = localStorage.getItem('token');
-      if (!token) {
+      if (!token || token === 'undefined' || token === 'null') {
         alert('Please log in to book a service.');
         navigate('/login');
         return;
@@ -69,7 +69,10 @@ const HomeRepair = () => {
       navigate('/my-bookings');
     } catch (error) {
       console.error('Booking error:', error);
-      alert('Failed to send booking request. Please try again.');
+      const errorMsg = error.response?.data?.error || error.message;
+      if (error.response?.status !== 401 && error.response?.status !== 403 && !errorMsg.includes('Invalid or expired token')) {
+        alert(`Failed to send booking request: ${errorMsg}`);
+      }
     }
   };
 

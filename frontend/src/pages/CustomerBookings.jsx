@@ -6,6 +6,21 @@ const CustomerBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const handlePayNow = async (bookingId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const paymentRes = await axios.post('http://localhost:5000/api/payments/initialize', {
+        booking_id: bookingId
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      window.location.href = paymentRes.data.checkout_url;
+    } catch (err) {
+      alert('Failed to initialize payment');
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     const fetchBookings = async () => {
       try {
@@ -64,6 +79,14 @@ const CustomerBookings = () => {
                   {booking.status}
                 </span>
                 <p style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--accent-secondary)' }}>{booking.total_price} ETB</p>
+                {booking.status === 'PENDING' && (
+                  <button 
+                    onClick={() => handlePayNow(booking.id)} 
+                    style={{ background: '#2563eb', padding: '8px 15px', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', marginTop: '5px' }}
+                  >
+                    Pay Now
+                  </button>
+                )}
               </div>
             </div>
           ))}

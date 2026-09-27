@@ -8,8 +8,8 @@ const router = express.Router();
 router.get('/availability', getAvailability);
 
 // Customer routes
-router.post('/', authenticate, authorize('CUSTOMER'), createBooking);
-router.get('/my', authenticate, authorize('CUSTOMER'), getCustomerBookings);
+router.post('/', authenticate, authorize('CUSTOMER', 'BUSINESS_OWNER', 'ADMIN'), createBooking);
+router.get('/my', authenticate, authorize('CUSTOMER', 'BUSINESS_OWNER', 'ADMIN'), getCustomerBookings);
 
 // Business Owner routes
 router.get('/business/:businessId', authenticate, authorize('BUSINESS_OWNER', 'ADMIN'), getBusinessBookings);

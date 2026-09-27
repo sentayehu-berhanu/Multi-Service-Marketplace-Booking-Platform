@@ -39,10 +39,11 @@ const RestaurantDetail = () => {
   const [cart, setCart] = useState([]);
   
   // Table Reservation state
-  const [selectedTable, setSelectedTable] = useState(null);
-  const [reserveDate, setReserveDate] = useState('');
-  const [reserveTime, setReserveTime] = useState('');
+  const [selectedTable, setSelectedTable] = useState('T3');
+  const [reserveDate, setReserveDate] = useState('May 21, 2024');
+  const [reserveTime, setReserveTime] = useState('7:00 PM');
   const [guests, setGuests] = useState(2);
+  const [area, setArea] = useState('Indoor');
 
   useEffect(() => {
     const fetchRestaurant = async () => {
@@ -141,214 +142,160 @@ const RestaurantDetail = () => {
   if (!business) return <div style={{ textAlign: 'center', padding: '4rem' }}>Restaurant not found</div>;
 
   return (
-    <div style={{ background: '#f8fafc', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
+    <div style={{ background: '#f4f7fb', minHeight: '100vh', fontFamily: "'Inter', sans-serif", padding: '2rem' }}>
       
-      {/* Header Info */}
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 24px 1rem 24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          <div>
-            <Link to="/shop/restaurant" style={{ color: '#64748b', textDecoration: 'none', display: 'inline-block', marginBottom: '1rem', fontSize: '0.9rem', fontWeight: 'bold' }}>← BACK TO SEARCH</Link>
-            <h1 style={{ fontSize: '2.5rem', margin: '0 0 10px 0', color: '#0f172a' }}>{business.name}</h1>
-            <div style={{ color: '#64748b', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <span>📍 {business.address || business.location || 'Addis Ababa'}</span>
-              <span style={{ color: '#2563eb', fontWeight: 'bold' }}>⭐ {business.rating || '4.8'}</span>
-              <span>🍽️ {business.cuisine || 'Ethiopian'}</span>
+      {/* Top Header */}
+      <div style={{ maxWidth: '1000px', margin: '0 auto', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <div style={{ fontSize: '2rem' }}>☕</div>
+        <h1 style={{ fontSize: '1.2rem', color: '#0f172a', margin: 0, fontWeight: '800', letterSpacing: '0.5px' }}>RESERVATION - RESTAURANT</h1>
+      </div>
+
+      {/* Main Container Card */}
+      <div style={{ maxWidth: '1000px', margin: '0 auto', background: 'white', borderRadius: '20px', padding: '2rem', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+        
+        {/* Business Header Card */}
+        <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2.5rem', alignItems: 'flex-start' }}>
+          <div style={{ 
+            width: '200px', height: '120px', 
+            background: `url(${business.gallery && business.gallery.length > 0 ? business.gallery[0] : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}) center/cover no-repeat`,
+            borderRadius: '15px'
+          }}></div>
+          
+          <div style={{ flex: 1 }}>
+            <h2 style={{ fontSize: '1.8rem', margin: '0 0 10px 0', color: '#0f172a' }}>{business.name}</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', color: '#64748b', marginBottom: '8px' }}>
+              <span style={{ color: '#f59e0b', fontWeight: 'bold' }}>⭐ {business.rating || '4.7'}</span>
+              <span>({business.reviewCount || 85} reviews)</span>
+              <span>•</span>
+              <span style={{ color: '#059669', fontWeight: 'bold' }}>Open Now</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', color: '#64748b' }}>
+              <span>📍 {business.distance || '1.3 km'}</span>
+              <span>•</span>
+              <span>{business.location || business.address || 'Kazanchis, Addis Ababa'}</span>
             </div>
           </div>
-          <button style={{ background: 'white', border: '1px solid #cbd5e1', padding: '10px 20px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', color: '#0f172a' }}>
-            ♡ Save
-          </button>
-        </div>
-      </div>
-
-      {/* Gallery Grid */}
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px 2rem 24px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gridTemplateRows: '200px 200px', gap: '10px', borderRadius: '20px', overflow: 'hidden' }}>
-          <div style={{ gridRow: '1 / 3', background: `url(${business.gallery[0]}) center/cover no-repeat` }}></div>
-          <div style={{ background: `url(${business.gallery[1]}) center/cover no-repeat` }}></div>
-          <div style={{ background: `url(${business.gallery[2]}) center/cover no-repeat` }}></div>
-        </div>
-      </div>
-
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px 4rem 24px', display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-        
-        {/* Left Content Area */}
-        <div style={{ flex: '1 1 700px' }}>
           
-          {/* Navigation Tabs */}
-          <div style={{ display: 'flex', gap: '2rem', borderBottom: '1px solid #e2e8f0', marginBottom: '2rem' }}>
-            {['Menu', 'Tables', 'Reviews', 'About'].map(tab => (
+          <div style={{ display: 'flex', gap: '15px' }}>
+            <button style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>♡</button>
+            <button style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>📤</button>
+          </div>
+        </div>
+
+        {/* Content Layout */}
+        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+          
+          {/* Left Column */}
+          <div style={{ flex: '1 1 500px' }}>
+            <h3 style={{ fontSize: '1.1rem', color: '#0f172a', marginBottom: '1rem', fontWeight: 'bold' }}>Select Table</h3>
+            
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '1.5rem' }}>
               <button 
-                key={tab}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => setArea('Indoor')}
                 style={{ 
-                  background: 'none', border: 'none', padding: '10px 0', 
-                  fontSize: '1.1rem', fontWeight: 'bold', cursor: 'pointer',
-                  color: activeTab === tab ? '#2563eb' : '#64748b',
-                  borderBottom: activeTab === tab ? '3px solid #2563eb' : '3px solid transparent',
-                  marginBottom: '-1px'
+                  padding: '8px 24px', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer',
+                  border: area === 'Indoor' ? '1px solid #e2e8f0' : 'none',
+                  background: area === 'Indoor' ? 'white' : '#f8fafc',
+                  color: area === 'Indoor' ? '#0f172a' : '#64748b',
+                  boxShadow: area === 'Indoor' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'
+                }}
+              >Indoor</button>
+              <button 
+                onClick={() => setArea('Outdoor')}
+                style={{ 
+                  padding: '8px 24px', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer',
+                  border: area === 'Outdoor' ? '1px solid #e2e8f0' : 'none',
+                  background: area === 'Outdoor' ? 'white' : '#f8fafc',
+                  color: area === 'Outdoor' ? '#0f172a' : '#64748b',
+                  boxShadow: area === 'Outdoor' ? '0 2px 4px rgba(0,0,0,0.05)' : 'none'
+                }}
+              >Outdoor</button>
+            </div>
+
+            {/* Tables Grid */}
+            <div style={{ 
+              display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '10px', 
+              background: '#f8fafc', padding: '1.5rem', borderRadius: '15px', marginBottom: '2rem' 
+            }}>
+              {['T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10'].map(t => (
+                <button 
+                  key={t}
+                  onClick={() => setSelectedTable(t)}
+                  style={{
+                    padding: '15px 0', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer',
+                    background: selectedTable === t ? '#ea580c' : 'white',
+                    color: selectedTable === t ? 'white' : '#0f172a',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                  }}
+                >{t}</button>
+              ))}
+            </div>
+
+            {/* People */}
+            <h3 style={{ fontSize: '1.1rem', color: '#0f172a', marginBottom: '1rem', fontWeight: 'bold' }}>People</h3>
+            <div style={{ position: 'relative' }}>
+              <select 
+                value={guests} 
+                onChange={(e) => setGuests(e.target.value)}
+                style={{ 
+                  width: '100%', padding: '15px', borderRadius: '10px', border: '1px solid #e2e8f0', 
+                  background: 'white', color: '#0f172a', fontSize: '1rem', outline: 'none', appearance: 'none',
+                  fontWeight: '500'
                 }}
               >
-                {tab}
-              </button>
-            ))}
+                <option value="1">1 Person</option>
+                <option value="2">2 People</option>
+                <option value="3">3 People</option>
+                <option value="4">4 People</option>
+                <option value="5">5 People</option>
+                <option value="6">6+ People</option>
+              </select>
+              <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b' }}>
+                ▼
+              </div>
+            </div>
           </div>
 
-          {activeTab === 'Menu' && (
-            <div>
-              {/* Popular Items */}
-              <h3 style={{ fontSize: '1.5rem', color: '#0f172a', marginBottom: '1rem' }}>Popular Right Now</h3>
-              <div style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '15px', marginBottom: '2rem' }}>
-                {menu.filter(m => m.popular).map(item => (
-                  <div key={`pop-${item.id}`} style={{ width: '220px', flexShrink: 0, background: 'white', borderRadius: '15px', overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-                    <div style={{ height: '140px', background: `url(${item.image ? (item.image.startsWith('/uploads') ? 'http://localhost:5000' + item.image : item.image) : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'}) center/cover no-repeat` }}></div>
-                    <div style={{ padding: '1rem' }}>
-                      <h4 style={{ margin: '0 0 5px 0', fontSize: '1.1rem', color: '#0f172a' }}>{item.name}</h4>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
-                        <span style={{ fontWeight: 'bold', color: '#2563eb' }}>{item.price} ETB</span>
-                        <button onClick={() => addToCart(item)} style={{ background: '#f1f5f9', border: 'none', borderRadius: '50%', width: '30px', height: '30px', cursor: 'pointer', fontWeight: 'bold' }}>+</button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Full Menu */}
-              <h3 style={{ fontSize: '1.5rem', color: '#0f172a', marginBottom: '1rem' }}>Full Menu</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                {menu.map(item => (
-                  <div key={item.id} style={{ display: 'flex', background: 'white', borderRadius: '15px', overflow: 'hidden', border: '1px solid #e2e8f0' }}>
-                    <div style={{ padding: '1.5rem', flex: 1 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
-                        <h4 style={{ margin: 0, fontSize: '1.2rem', color: '#0f172a' }}>{item.name}</h4>
-                        <span style={{ fontWeight: 'bold', color: '#2563eb' }}>{item.price} ETB</span>
-                      </div>
-                      <p style={{ color: '#64748b', fontSize: '0.9rem', margin: '0 0 15px 0', lineHeight: '1.5' }}>
-                        {item.description || 'Delicious freshly prepared meal.'}
-                      </p>
-                      <button 
-                        onClick={() => addToCart(item)}
-                        style={{ padding: '8px 15px', background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
-                      >
-                        Add to Order
-                      </button>
-                    </div>
-                    {item.image && (
-                      <div style={{ width: '150px', background: `url(${item.image.startsWith('/uploads') ? 'http://localhost:5000' + item.image : item.image}) center/cover no-repeat` }}></div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'Tables' && (
-            <div>
-              <h3 style={{ fontSize: '1.5rem', color: '#0f172a', marginBottom: '1rem' }}>Select a Table</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '15px' }}>
-                {tables.map(table => (
-                  <div 
-                    key={table.id}
-                    onClick={() => setSelectedTable(table)}
-                    style={{ 
-                      background: selectedTable?.id === table.id ? '#eff6ff' : 'white', 
-                      borderRadius: '15px', padding: '1.5rem', border: selectedTable?.id === table.id ? '2px solid #2563eb' : '1px solid #e2e8f0',
-                      cursor: 'pointer', textAlign: 'center', transition: '0.2s',
-                      boxShadow: selectedTable?.id === table.id ? '0 10px 15px -3px rgba(37,99,235,0.1)' : 'none'
-                    }}
-                  >
-                    <div style={{ fontSize: '2rem', marginBottom: '10px' }}>🪑</div>
-                    <h4 style={{ margin: '0 0 5px 0', color: '#0f172a' }}>{table.name}</h4>
-                    <p style={{ margin: 0, color: '#64748b', fontSize: '0.9rem' }}>Capacity: {table.capacity}</p>
-                    <p style={{ margin: '5px 0 0 0', color: '#64748b', fontSize: '0.9rem' }}>{table.location}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'Reviews' && <div style={{ color: '#64748b' }}>Reviews coming soon...</div>}
-          {activeTab === 'About' && <div style={{ color: '#64748b' }}>{business.description || 'Welcome to our restaurant! We pride ourselves on excellent food and service.'}</div>}
-
-        </div>
-
-        {/* Right Sidebar - Booking/Order Widget */}
-        <div style={{ flex: '1 1 350px' }}>
-          <div style={{ background: 'white', padding: '2rem', borderRadius: '15px', border: '1px solid #e2e8f0', position: 'sticky', top: '2rem', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.05)' }}>
-            
-            {/* Table Reservation Section */}
-            <div style={{ marginBottom: '2rem' }}>
-              <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
-                Reserve a Table
-              </h3>
+          {/* Right Column */}
+          <div style={{ flex: '1 1 350px' }}>
+            <div style={{ background: '#f8fafc', borderRadius: '15px', padding: '2rem' }}>
+              <h3 style={{ fontSize: '1.1rem', color: '#0f172a', marginBottom: '1.5rem', fontWeight: 'bold' }}>Reservation Details</h3>
               
-              <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', color: '#475569', marginBottom: '5px', fontSize: '0.9rem' }}>Date</label>
-                <input type="date" value={reserveDate} onChange={e => setReserveDate(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', boxSizing: 'border-box' }} />
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', color: '#475569', fontSize: '0.95rem' }}>
+                <span>Date</span>
+                <span style={{ color: '#0f172a', fontWeight: '600' }}>{reserveDate}</span>
               </div>
-
-              <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-                <div style={{ flex: 1 }}>
-                  <label style={{ display: 'block', color: '#475569', marginBottom: '5px', fontSize: '0.9rem' }}>Time</label>
-                  <input type="time" value={reserveTime} onChange={e => setReserveTime(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', boxSizing: 'border-box' }} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <label style={{ display: 'block', color: '#475569', marginBottom: '5px', fontSize: '0.9rem' }}>Guests</label>
-                  <input type="number" min="1" value={guests} onChange={e => setGuests(e.target.value)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #cbd5e1', outline: 'none', boxSizing: 'border-box' }} />
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', color: '#475569', fontSize: '0.95rem' }}>
+                <span>Time</span>
+                <span style={{ color: '#0f172a', fontWeight: '600' }}>{reserveTime}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', color: '#475569', fontSize: '0.95rem' }}>
+                <span>Table</span>
+                <span style={{ color: '#0f172a', fontWeight: '600' }}>{selectedTable || '-'}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', color: '#475569', fontSize: '0.95rem' }}>
+                <span>Total</span>
+                <span style={{ color: '#0f172a', fontWeight: 'bold' }}>0 ETB</span>
               </div>
 
               <button 
                 onClick={handleReserveTable}
-                style={{ width: '100%', padding: '12px', background: '#0f172a', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
-              >
-                RESERVE TABLE {selectedTable && `(${selectedTable.name})`}
-              </button>
-            </div>
+                style={{ 
+                  width: '100%', padding: '12px', background: '#ea580c', color: 'white', 
+                  border: 'none', borderRadius: '10px', fontSize: '1.1rem', fontWeight: 'bold', 
+                  cursor: 'pointer', marginBottom: '1.5rem'
+                }}
+              >Reserve Table</button>
 
-            {/* Food Order Section */}
-            <div>
-              <h3 style={{ margin: '0 0 1rem 0', fontSize: '1.2rem', color: '#0f172a', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
-                Your Order
-              </h3>
-              
-              {cart.length === 0 ? (
-                <div style={{ color: '#94a3b8', textAlign: 'center', padding: '1rem 0' }}>Cart is empty</div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '1.5rem', maxHeight: '250px', overflowY: 'auto' }}>
-                  {cart.map(item => (
-                    <div key={`cart-${item.id}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div>
-                        <div style={{ color: '#0f172a', fontSize: '0.95rem', fontWeight: 'bold' }}>{item.name}</div>
-                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>{item.price} ETB</div>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <button onClick={() => removeFromCart(item.id)} style={{ background: '#f1f5f9', border: 'none', borderRadius: '4px', width: '25px', height: '25px', cursor: 'pointer' }}>-</button>
-                        <span style={{ fontSize: '0.9rem' }}>{item.quantity}</span>
-                        <button onClick={() => addToCart(item)} style={{ background: '#f1f5f9', border: 'none', borderRadius: '4px', width: '25px', height: '25px', cursor: 'pointer' }}>+</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderTop: '1px solid #e2e8f0', paddingTop: '1rem' }}>
-                <span style={{ color: '#475569', fontWeight: 'bold' }}>Total</span>
-                <span style={{ color: '#2563eb', fontWeight: 'bold', fontSize: '1.2rem' }}>{cartTotal.toLocaleString()} ETB</span>
+              <div style={{ background: 'white', padding: '1rem', borderRadius: '10px' }}>
+                <div style={{ color: '#475569', fontSize: '0.85rem', marginBottom: '5px' }}>Contact</div>
+                <div style={{ color: '#0f172a', fontWeight: '600', fontSize: '0.95rem' }}>+251 91 654 3210</div>
               </div>
-
-              <button 
-                onClick={handleOrderFood}
-                disabled={cart.length === 0}
-                style={{ width: '100%', padding: '12px', background: cart.length === 0 ? '#cbd5e1' : '#2563eb', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: cart.length === 0 ? 'not-allowed' : 'pointer' }}
-              >
-                ORDER FOOD
-              </button>
             </div>
-
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
   );

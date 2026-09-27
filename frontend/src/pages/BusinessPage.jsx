@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import MapWidget from '../components/MapWidget';
 
 const BusinessPage = () => {
   const { id } = useParams();
@@ -19,27 +20,84 @@ const BusinessPage = () => {
   // Cart logic instead of a simple selected array
   const [cart, setCart] = useState([]);
 
+  // Reviews State
+  const [reviews, setReviews] = useState([]);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewError, setReviewError] = useState('');
+
   useEffect(() => {
     const fetchBusiness = async () => {
       try {
         const res = await axios.get('http://localhost:5000/api/businesses');
         const found = res.data.find(b => b.id === parseInt(id));
         if (found) {
-          const gallery = [
-            found.cover_image || 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1621605815971-fbc98d665033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-            'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-          ];
+          const categorySlug = found.category?.slug || '';
           
+          let gallery = [];
+          if (categorySlug === 'womens-salon' || categorySlug === 'salon') {
+            gallery = [
+              found.cover_image || 'https://images.unsplash.com/photo-1562322140-8baeececf3df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+              'https://images.unsplash.com/photo-1522337660859-02fbefca4702?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+              'https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+            ];
+          } else if (categorySlug === 'pharmacy') {
+            gallery = [
+              found.cover_image || 'https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+              'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+              'https://images.unsplash.com/photo-1576602976047-174e57a47881?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+            ];
+          } else if (categorySlug === 'barber') {
+            gallery = [
+              found.cover_image || 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+              'https://images.unsplash.com/photo-1621605815971-fbc98d665033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+              'https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+            ];
+          } else {
+            gallery = [
+              found.cover_image || 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+              'https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+              'https://images.unsplash.com/photo-1497215842964-222b430dc094?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+            ];
+          }
+
+          let fallbackServices = [];
+          if (categorySlug === 'womens-salon' || categorySlug === 'salon') {
+            fallbackServices = [
+              { id: 991, name: 'Hair Styling & Blowout', duration: 45, price: 400, description: 'Professional styling for any occasion.' },
+              { id: 992, name: 'Full Hair Coloring', duration: 120, price: 1500, description: 'Premium dye and full coverage.' },
+              { id: 993, name: 'Manicure & Pedicure', duration: 60, price: 600, description: 'Complete nail care and polish.' },
+              { id: 994, name: 'Bridal Makeup', duration: 90, price: 2500, description: 'Full makeup for your special day.' }
+            ];
+          } else if (categorySlug === 'cosmetics') {
+             fallbackServices = [
+              { id: 991, name: 'Makeup Consultation', duration: 30, price: 300, description: 'Professional advice on products.' },
+              { id: 992, name: 'Skin Care Routine Setup', duration: 45, price: 500, description: 'Personalized skin care plan.' }
+            ];
+          } else if (categorySlug === 'barber') {
+            fallbackServices = [
+              { id: 991, name: 'Haircut', duration: 30, price: 200, description: 'Premium cut with a hot towel finish.' },
+              { id: 992, name: 'Beard Trim', duration: 15, price: 100, description: 'Detailed trim and styling.' },
+              { id: 993, name: 'Hair + Beard', duration: 45, price: 280, description: 'The complete grooming experience.' }
+            ];
+          } else if (categorySlug === 'pharmacy') {
+            fallbackServices = [
+              { id: 991, name: 'Health Consultation', duration: 15, price: 100, description: 'Speak with a pharmacist about your medications.' },
+              { id: 992, name: 'Blood Pressure Check', duration: 10, price: 50, description: 'Quick and accurate blood pressure monitoring.' },
+              { id: 993, name: 'Prescription Refill Setup', duration: 20, price: 0, description: 'Set up automatic refills for your prescriptions.' }
+            ];
+          } else {
+             fallbackServices = [
+              { id: 991, name: 'Standard Service', duration: 30, price: 200, description: 'Basic service offering.' },
+              { id: 992, name: 'Premium Service', duration: 60, price: 500, description: 'Comprehensive service package.' }
+            ];
+          }
+
           setBusiness({
             ...found,
             gallery: gallery,
-            services: (found.services && found.services.length > 0) ? found.services : [
-              { id: 991, name: 'Haircut', duration: 30, price: 200, description: 'Premium cut with a hot towel finish.' },
-              { id: 992, name: 'Beard Trim', duration: 15, price: 100, description: 'Detailed trim and styling.' },
-              { id: 993, name: 'Hair + Beard', duration: 45, price: 280, description: 'The complete grooming experience.' },
-              { id: 994, name: 'Facial Treatment', duration: 60, price: 500, description: 'Deep cleansing and relaxing facial.' }
-            ]
+            services: (found.services && found.services.length > 0) ? found.services : fallbackServices
           });
         }
       } catch (err) {
@@ -51,6 +109,65 @@ const BusinessPage = () => {
 
     fetchBusiness();
   }, [id]);
+
+  useEffect(() => {
+    if (activeTab === 'Reviews') {
+      const fetchReviews = async () => {
+        setLoadingReviews(true);
+        try {
+          const res = await axios.get(`http://localhost:5000/api/reviews/business/${id}`);
+          setReviews(res.data);
+        } catch (err) {
+          console.error('Error fetching reviews:', err);
+        } finally {
+          setLoadingReviews(false);
+        }
+      };
+      fetchReviews();
+    }
+  }, [id, activeTab]);
+
+  const submitReview = async () => {
+    setReviewError('');
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setReviewError('You must be logged in to leave a review.');
+      return;
+    }
+    if (!reviewComment.trim()) {
+      setReviewError('Review comment cannot be empty.');
+      return;
+    }
+    
+    try {
+      const res = await axios.post(`http://localhost:5000/api/reviews`, {
+        business_id: parseInt(id),
+        rating: reviewRating,
+        comment: reviewComment
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      const newReview = {
+        ...res.data.review,
+        customer: { name: JSON.parse(localStorage.getItem('user'))?.name || 'You' }
+      };
+      setReviews([newReview, ...reviews]);
+      setReviewComment('');
+      setReviewRating(5);
+      
+      // Update business rating in UI visually
+      setBusiness(prev => ({
+        ...prev,
+        rating: ((prev.rating * prev.review_count) + reviewRating) / (prev.review_count + 1),
+        review_count: prev.review_count + 1
+      }));
+      
+      alert('Review submitted successfully!');
+    } catch (err) {
+      setReviewError(err.response?.data?.error || 'Failed to submit review');
+    }
+  };
 
   const addToCart = (service) => {
     setCart(prev => {
@@ -105,12 +222,19 @@ const BusinessPage = () => {
         start_time: start_time
       };
 
-      await axios.post('http://localhost:5000/api/bookings', payload, {
+      const bookingRes = await axios.post('http://localhost:5000/api/bookings', payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      alert('Booking Confirmed!');
-      navigate('/my-bookings');
+      // Initialize Payment
+      const paymentRes = await axios.post('http://localhost:5000/api/payments/initialize', {
+        booking_id: bookingRes.data.booking.id
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      // Redirect to the Mock Checkout Page
+      window.location.href = paymentRes.data.checkout_url;
     } catch (error) {
       console.error('Booking failed', error);
       alert('Failed to create booking: ' + (error.response?.data?.error || error.message));
@@ -187,7 +311,7 @@ const BusinessPage = () => {
               <div style={{ display: 'flex', gap: '15px', overflowX: 'auto', paddingBottom: '15px', marginBottom: '2rem' }}>
                 {popularServices.map(service => (
                   <div key={`pop-${service.id}`} style={{ width: '220px', flexShrink: 0, background: 'white', borderRadius: '15px', overflow: 'hidden', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
-                    <div style={{ height: '140px', background: `url(${service.image || 'https://images.unsplash.com/photo-1593062096033-9a26b09da705?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'}) center/cover no-repeat` }}></div>
+                    <div style={{ height: '140px', background: `url(${service.image || 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=400&q=80'}) center/cover no-repeat` }}></div>
                     <div style={{ padding: '1rem' }}>
                       <h4 style={{ margin: '0 0 5px 0', fontSize: '1.1rem', color: '#0f172a' }}>{service.name}</h4>
                       <p style={{ margin: '0 0 10px 0', color: '#64748b', fontSize: '0.85rem' }}>⏱️ {service.duration} mins</p>
@@ -235,14 +359,78 @@ const BusinessPage = () => {
             </div>
           )}
 
-          {activeTab === 'Reviews' && <div style={{ color: '#64748b', padding: '1rem 0' }}>User reviews will be displayed here...</div>}
+          {activeTab === 'Reviews' && (
+            <div style={{ padding: '1rem 0' }}>
+              <h3 style={{ fontSize: '1.5rem', color: '#0f172a', marginBottom: '1.5rem' }}>Write a Review</h3>
+              
+              <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '15px', border: '1px solid #e2e8f0', marginBottom: '3rem' }}>
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
+                  {[1,2,3,4,5].map(star => (
+                    <span 
+                      key={star} 
+                      onClick={() => setReviewRating(star)}
+                      style={{ 
+                        fontSize: '2rem', 
+                        cursor: 'pointer', 
+                        color: star <= reviewRating ? '#fbbf24' : '#cbd5e1',
+                        transition: 'color 0.2s'
+                      }}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <textarea 
+                  value={reviewComment}
+                  onChange={(e) => setReviewComment(e.target.value)}
+                  placeholder="Share your experience with this business..."
+                  style={{ width: '100%', padding: '15px', borderRadius: '10px', border: '1px solid #cbd5e1', minHeight: '100px', fontSize: '1rem', marginBottom: '1rem', outline: 'none' }}
+                />
+                {reviewError && <p style={{ color: '#ef4444', marginBottom: '1rem', fontSize: '0.9rem' }}>{reviewError}</p>}
+                <button 
+                  onClick={submitReview}
+                  style={{ background: '#2563eb', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                  Submit Review
+                </button>
+              </div>
+
+              <h3 style={{ fontSize: '1.5rem', color: '#0f172a', marginBottom: '1.5rem' }}>Customer Reviews ({business.review_count || reviews.length})</h3>
+              
+              {loadingReviews ? (
+                <p>Loading reviews...</p>
+              ) : reviews.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {reviews.map(review => (
+                    <div key={review.id} style={{ background: 'white', padding: '1.5rem', borderRadius: '15px', border: '1px solid #e2e8f0' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <strong style={{ color: '#0f172a' }}>{review.customer?.name || 'Customer'}</strong>
+                        <span style={{ color: '#64748b', fontSize: '0.9rem' }}>
+                          {new Date(review.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div style={{ color: '#fbbf24', marginBottom: '10px' }}>
+                        {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                      </div>
+                      <p style={{ color: '#475569', margin: 0, lineHeight: '1.5' }}>{review.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p style={{ color: '#64748b' }}>No reviews yet. Be the first to review!</p>
+              )}
+            </div>
+          )}
           
           {activeTab === 'About' && (
             <div style={{ padding: '1rem 0' }}>
               <h3 style={{ fontSize: '1.5rem', color: '#0f172a', marginBottom: '1rem' }}>About {business.name}</h3>
-              <p style={{ color: '#475569', fontSize: '1.1rem', lineHeight: '1.6' }}>
+              <p style={{ color: '#475569', fontSize: '1.1rem', lineHeight: '1.6', marginBottom: '2rem' }}>
                 {business.description || 'Premium services providing the best experiences in the city. Our professional staff ensures you leave looking and feeling your absolute best.'}
               </p>
+              
+              <h3 style={{ fontSize: '1.5rem', color: '#0f172a', marginBottom: '1rem' }}>Location</h3>
+              <MapWidget businesses={[business]} height="300px" />
             </div>
           )}
 

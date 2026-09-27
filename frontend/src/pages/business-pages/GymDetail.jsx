@@ -6,13 +6,17 @@ import { FiMapPin, FiStar, FiClock, FiCheck, FiUsers, FiActivity } from 'react-i
 const GymDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('membership');
+  const [activeTab, setActiveTab] = useState('Membership');
 
   const [gym, setGym] = useState(null);
-  const [memberships, setMemberships] = useState([]);
-  const [classes, setClasses] = useState([]);
-  const [trainers, setTrainers] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Booking Form State
+  const [selectedPlan, setSelectedPlan] = useState('Standard Plan');
+  const [selectedDate, setSelectedDate] = useState('May 21, 2024');
+  const [paymentMethod, setPaymentMethod] = useState('Wallet (3,450 ETB)');
+
+  const TABS = ['Overview', 'Membership', 'Trainers', 'Reviews', 'Gallery'];
 
   useEffect(() => {
     const fetchGym = async () => {
@@ -101,155 +105,200 @@ const GymDetail = () => {
   if (!gym) return <div style={{ padding: '40px', textAlign: 'center' }}>Gym not found</div>;
 
   return (
-    <div className="container" style={{ padding: '40px 24px', maxWidth: '1200px', margin: '0 auto' }}>
+    <div style={{ background: '#f4f7fb', minHeight: '100vh', fontFamily: "'Inter', sans-serif", padding: '2rem' }}>
       
-      {/* Hero Section */}
-      <div className="glass-panel" style={{ padding: '40px', marginBottom: '32px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '-50px', right: '-50px', fontSize: '15rem', opacity: 0.03, pointerEvents: 'none' }}>
-          🏋️
-        </div>
-        
-        <h1 className="gradient-text" style={{ fontSize: '3rem', margin: '0 0 16px 0' }}>{gym.name}</h1>
-        
-        <div style={{ display: 'flex', gap: '24px', color: 'var(--text-secondary)', marginBottom: '24px', flexWrap: 'wrap' }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FiMapPin /> {gym.address || 'Addis Ababa'}</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--warning)' }}><FiStar /> 4.8 (124 Reviews)</span>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><FiClock /> Open 5:00 AM - 11:00 PM</span>
-        </div>
-        
-        <p style={{ maxWidth: '800px', lineHeight: '1.6' }}>
-          {gym.description || 'Welcome to our premier fitness destination. We offer state-of-the-art equipment, dynamic group classes, and expert personal trainers to help you reach your fitness goals.'}
-        </p>
+      {/* Top Header */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <div style={{ fontSize: '2rem', color: '#2563eb' }}>🏋🏽‍♂️</div>
+        <h1 style={{ fontSize: '1.2rem', color: '#0f172a', margin: 0, fontWeight: '800', letterSpacing: '0.5px' }}>BOOKING - GYM</h1>
       </div>
 
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: '16px', marginBottom: '32px', overflowX: 'auto', paddingBottom: '8px' }}>
-        {['membership', 'classes', 'trainers', 'schedule', 'reviews'].map(tab => (
-          <button 
-            key={tab}
-            className={`btn-secondary ${activeTab === tab ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab)}
-            style={{ 
-              textTransform: 'capitalize', 
-              background: activeTab === tab ? 'var(--accent-primary)' : 'rgba(255,255,255,0.05)',
-              color: activeTab === tab ? 'white' : 'var(--text-secondary)',
-              border: 'none',
-              minWidth: 'max-content'
-            }}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Tab Content */}
-      <div className="tab-content">
+      {/* Main Container Card */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', background: 'white', borderRadius: '20px', padding: '2rem', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
         
-        {/* MEMBERSHIP TAB */}
-        {activeTab === 'membership' && (
+        {/* Business Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
           <div>
-            <h2 style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <FiCheck /> Membership Plans
-            </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px' }}>
-              {memberships.length > 0 ? memberships.map((plan) => (
-                <div key={plan.id} className="glass-panel hover-scale" style={{ 
-                  padding: '32px 24px', 
-                  display: 'flex', flexDirection: 'column',
-                  border: plan.name.toLowerCase().includes('premium') ? '2px solid var(--accent-primary)' : '1px solid rgba(255,255,255,0.05)',
-                  position: 'relative'
-                }}>
-                  {plan.name.toLowerCase().includes('premium') && (
-                    <div style={{ position: 'absolute', top: 0, right: '50%', transform: 'translate(50%, -50%)', background: 'var(--accent-gradient)', padding: '4px 16px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                      MOST POPULAR
-                    </div>
-                  )}
-                  
-                  <h3 style={{ fontSize: '1.5rem', marginBottom: '8px', color: 'var(--text-primary)' }}>{plan.name}</h3>
-                  <div style={{ color: 'var(--text-secondary)', marginBottom: '16px' }}>{plan.duration}</div>
-                  <div style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '24px', color: 'var(--accent-secondary)' }}>
-                    {plan.price.toLocaleString()} <span style={{ fontSize: '1rem', color: 'var(--text-secondary)' }}>ETB</span>
-                  </div>
-                  
-                  <div style={{ flex: 1, marginBottom: '24px' }}>
-                    {plan.features.map((feature, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                        <FiCheck color="var(--success)" /> {feature}
+            <h2 style={{ fontSize: '1.8rem', margin: '0 0 10px 0', color: '#0f172a' }}>{gym.name || 'Power Gym'}</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', color: '#64748b' }}>
+              <span style={{ color: '#f59e0b', fontWeight: 'bold' }}>⭐ {gym.rating || '4.6'}</span>
+              <span>({gym.reviews?.length || 93} reviews)</span>
+              <span>•</span>
+              <span style={{ color: '#059669', fontWeight: 'bold' }}>Open Now</span>
+              <span>•</span>
+              <span>📍 {gym.distance || '1.1 km'} - {gym.location || gym.address || 'Mexico, Addis Ababa'}</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '15px' }}>
+            <button style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>♡</button>
+            <button style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>📤</button>
+          </div>
+        </div>
+
+        {/* Content Layout */}
+        <div style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
+          
+          {/* Left Column */}
+          <div style={{ flex: '1 1 600px' }}>
+            
+            {/* Gallery */}
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '1.5rem' }}>
+              <div style={{ flex: 1, height: '150px', background: `url(${gym.gallery?.[0] || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&w=400&q=80'}) center/cover`, borderRadius: '12px' }}></div>
+              <div style={{ flex: 1, height: '150px', background: `url(${gym.gallery?.[1] || 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&w=400&q=80'}) center/cover`, borderRadius: '12px' }}></div>
+              <div style={{ flex: 1, height: '150px', background: `url(${gym.gallery?.[2] || 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?ixlib=rb-4.0.3&w=400&q=80'}) center/cover`, borderRadius: '12px' }}></div>
+            </div>
+
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: '2rem', borderBottom: '1px solid #e2e8f0', marginBottom: '2rem' }}>
+              {TABS.map(tab => (
+                <button 
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  style={{ 
+                    background: 'none', border: 'none', padding: '10px 0', 
+                    fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer',
+                    color: activeTab === tab ? '#2563eb' : '#64748b',
+                    borderBottom: activeTab === tab ? '3px solid #2563eb' : '3px solid transparent',
+                    marginBottom: '-1px'
+                  }}
+                >{tab}</button>
+              ))}
+            </div>
+
+            {/* Tab Content */}
+            {activeTab === 'Membership' && (
+              <div>
+                <h3 style={{ fontSize: '1.2rem', color: '#0f172a', marginBottom: '1.5rem', fontWeight: 'bold' }}>Membership Plans</h3>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {/* Plan 1 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '15px' }}>
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                      <div style={{ width: '45px', height: '45px', borderRadius: '8px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', border: '1px solid #e2e8f0' }}>🎫</div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1rem' }}>Basic Plan</div>
+                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>1 Month</div>
                       </div>
-                    ))}
-                  </div>
-                  
-                  <button className={plan.name.toLowerCase().includes('premium') ? "btn-primary" : "btn-secondary"} style={{ width: '100%', padding: '14px' }} onClick={() => handleChoosePlan(plan)}>
-                    CHOOSE PLAN
-                  </button>
-                </div>
-              )) : <div style={{ color: 'var(--text-secondary)' }}>No memberships currently available.</div>}
-            </div>
-          </div>
-        )}
-
-        {/* CLASSES TAB */}
-        {activeTab === 'classes' && (
-          <div>
-            <h2 style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <FiActivity /> Fitness Classes
-            </h2>
-            <div style={{ display: 'grid', gap: '16px' }}>
-              {classes.length > 0 ? classes.map(cls => (
-                <div key={cls.id} className="glass-panel" style={{ padding: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <h3 style={{ margin: '0 0 8px 0' }}>{cls.name}</h3>
-                    <div style={{ display: 'flex', gap: '16px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                      <span><FiClock style={{ verticalAlign: 'middle' }}/> {cls.time}</span>
-                      <span><FiUsers style={{ verticalAlign: 'middle' }}/> Trainer: {cls.trainer}</span>
-                      <span style={{ color: 'var(--accent-secondary)' }}>Level: {cls.level}</span>
                     </div>
+                    <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1.1rem' }}>1,000 ETB</div>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <span style={{ fontWeight: 'bold', color: 'var(--accent-secondary)' }}>{cls.price} ETB</span>
-                    <button className="btn-primary" onClick={() => handleBookClass(cls)}>Book Class</button>
+                  {/* Plan 2 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '15px' }}>
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                      <div style={{ width: '45px', height: '45px', borderRadius: '8px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', border: '1px solid #e2e8f0' }}>🥈</div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1rem' }}>Standard Plan</div>
+                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>3 Months</div>
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1.1rem' }}>2,500 ETB</div>
+                  </div>
+                  {/* Plan 3 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '15px' }}>
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                      <div style={{ width: '45px', height: '45px', borderRadius: '8px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', border: '1px solid #e2e8f0' }}>🥇</div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1rem' }}>Premium Plan</div>
+                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>6 Months</div>
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1.1rem' }}>4,800 ETB</div>
+                  </div>
+                  {/* Plan 4 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '15px' }}>
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                      <div style={{ width: '45px', height: '45px', borderRadius: '8px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', border: '1px solid #e2e8f0' }}>👑</div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1rem' }}>VIP Plan</div>
+                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>12 Months</div>
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1.1rem' }}>7,000 ETB</div>
+                  </div>
+                  {/* Plan 5 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '15px' }}>
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                      <div style={{ width: '45px', height: '45px', borderRadius: '8px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', border: '1px solid #e2e8f0' }}>💪</div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1rem' }}>Personal Training</div>
+                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>Per Session</div>
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1.1rem' }}>500 ETB</div>
+                  </div>
+                  {/* Plan 6 */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '15px' }}>
+                    <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+                      <div style={{ width: '45px', height: '45px', borderRadius: '8px', background: '#f8fafc', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', border: '1px solid #e2e8f0' }}>🧘‍♀️</div>
+                      <div>
+                        <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1rem' }}>Group Class</div>
+                        <div style={{ color: '#64748b', fontSize: '0.85rem' }}>Per Session</div>
+                      </div>
+                    </div>
+                    <div style={{ fontWeight: 'bold', color: '#0f172a', fontSize: '1.1rem' }}>200 ETB</div>
                   </div>
                 </div>
-              )) : <div style={{ color: 'var(--text-secondary)' }}>No classes currently available.</div>}
-            </div>
+              </div>
+            )}
+            {activeTab !== 'Membership' && <div style={{ color: '#64748b' }}>{activeTab} content...</div>}
           </div>
-        )}
 
-        {/* TRAINERS TAB */}
-        {activeTab === 'trainers' && (
-          <div>
-            <h2 style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <FiUsers /> Personal Trainers
-            </h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px' }}>
-              {trainers.length > 0 ? trainers.map(trainer => (
-                <div key={trainer.id} className="glass-panel hover-scale" style={{ padding: '24px', textAlign: 'center' }}>
-                  <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--accent-gradient)', margin: '0 auto 16px auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <FiUsers size={32} />
-                  </div>
-                  <h3 style={{ margin: '0 0 8px 0' }}>{trainer.name}</h3>
-                  <p style={{ color: 'var(--text-secondary)', margin: '0 0 16px 0', fontSize: '0.9rem' }}>{trainer.specialty}</p>
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '4px', color: 'var(--warning)', marginBottom: '16px' }}>
-                    <FiStar /><FiStar /><FiStar /><FiStar /><FiStar /> 
-                  </div>
-                  <div style={{ fontWeight: 'bold', color: 'var(--accent-secondary)', marginBottom: '16px' }}>
-                    {trainer.price} ETB / Session
-                  </div>
-                  <button className="btn-secondary" style={{ width: '100%' }} onClick={() => handleBookTrainer(trainer)}>Book Session</button>
+          {/* Right Column (Widget) */}
+          <div style={{ flex: '1 1 350px' }}>
+            <div style={{ background: '#f8fafc', borderRadius: '15px', padding: '2rem', border: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: '1.2rem', color: '#0f172a', marginBottom: '1.5rem', fontWeight: 'bold' }}>Choose Plan</h3>
+              
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Select Plan</label>
+                <div style={{ position: 'relative' }}>
+                  <select value={selectedPlan} onChange={e => setSelectedPlan(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', outline: 'none', appearance: 'none', fontWeight: '500', color: '#0f172a' }}>
+                    <option>Basic Plan</option>
+                    <option>Standard Plan</option>
+                    <option>Premium Plan</option>
+                    <option>VIP Plan</option>
+                  </select>
+                  <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b', fontSize: '0.8rem' }}>▼</div>
                 </div>
-              )) : <div style={{ color: 'var(--text-secondary)' }}>No trainers currently available.</div>}
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Select Date</label>
+                <input type="text" value={selectedDate} onChange={e => setSelectedDate(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', outline: 'none', fontWeight: '500', color: '#0f172a' }} />
+              </div>
+
+              <div style={{ marginBottom: '2rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Payment Method</label>
+                <div style={{ position: 'relative' }}>
+                  <select value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', outline: 'none', appearance: 'none', fontWeight: '500', color: '#0f172a' }}>
+                    <option>Wallet (3,450 ETB)</option>
+                    <option>Credit Card</option>
+                    <option>Cash</option>
+                  </select>
+                  <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: '#64748b', fontSize: '0.8rem' }}>▼</div>
+                </div>
+              </div>
+
+              <button style={{ width: '100%', padding: '14px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', marginBottom: '1.5rem', boxShadow: '0 4px 6px -1px rgba(37, 99, 235, 0.4)' }}>
+                Continue
+              </button>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '5px' }}>
+                <span style={{ color: '#475569' }}>Open Hours</span>
+                <span style={{ color: '#0f172a', fontWeight: '500' }}></span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#64748b', marginBottom: '1rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '10px' }}>
+                <span>Mon - Sun</span>
+                <span>6:00 AM - 10:00 PM</span>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginTop: '10px' }}>
+                <span style={{ color: '#475569' }}>Contact</span>
+                <span style={{ color: '#0f172a', fontWeight: '500' }}>+251 91 111 2233</span>
+              </div>
             </div>
           </div>
-        )}
 
-        {/* Placeholder for Schedule and Reviews */}
-        {(activeTab === 'schedule' || activeTab === 'reviews') && (
-          <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-            <h3 style={{ marginBottom: '16px' }}>{activeTab === 'schedule' ? 'Weekly Schedule' : 'Customer Reviews'}</h3>
-            <p>This section is currently being updated. Please check back later.</p>
-          </div>
-        )}
-
+        </div>
       </div>
     </div>
   );

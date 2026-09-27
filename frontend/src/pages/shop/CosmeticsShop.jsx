@@ -28,7 +28,10 @@ const CosmeticsShop = () => {
       url += `&maxPrice=${priceRange}`;
 
       const res = await axios.get(url);
-      setProducts(res.data);
+      // Filter products to ensure we only show cosmetics (in case API returns everything)
+      const validCategories = ['Skin Care', 'Hair Care', 'Makeup', 'Fragrance', 'Body Care', 'Beauty Tools'];
+      const filtered = res.data.filter(p => validCategories.includes(p.category));
+      setProducts(filtered);
     } catch (err) {
       console.error('Failed to fetch cosmetics:', err);
     } finally {

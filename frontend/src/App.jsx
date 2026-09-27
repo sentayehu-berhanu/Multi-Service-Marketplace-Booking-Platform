@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
 import BusinessPage from './pages/BusinessPage';
 import CosmeticsShop from './pages/shop/CosmeticsShop';
+import CosmeticsDetail from './pages/business-pages/CosmeticsDetail';
 import BarberShop from './pages/shop/BarberShop';
 import BarberDetail from './pages/business-pages/BarberDetail';
 import WomensSalonPage from './pages/business-pages/WomensSalonPage';
@@ -11,6 +12,7 @@ import ParkingShop from './pages/shop/ParkingShop';
 import ParkingDetail from './pages/business-pages/ParkingDetail';
 import ParkingConfirmation from './pages/booking/ParkingConfirmation';
 import PharmacyShop from './pages/shop/PharmacyShop';
+import PharmacyDetail from './pages/business-pages/PharmacyDetail';
 import PharmacyProductDetail from './pages/business-pages/PharmacyProductDetail';
 import PharmacyCheckoutFlow from './pages/booking/PharmacyCheckoutFlow';
 import CafeDetail from './pages/business-pages/CafeDetail';
@@ -60,6 +62,7 @@ import HealthcareSearch from './pages/shop/HealthcareSearch';
 import HealthcareDoctorDetail from './pages/business-pages/HealthcareDoctorDetail';
 import SpaBooking from './pages/shop/SpaBooking';
 import Transportation from './pages/transportation/Transportation';
+import MockCheckout from './pages/payment/MockCheckout';
 
 import AdminDashboardLayout from './layouts/AdminDashboardLayout';
 import AdminBusinesses from './pages/admin-dashboard/AdminBusinesses';
@@ -86,10 +89,12 @@ function App() {
           <Route path="shop/barber" element={<BarberShop />} />
           <Route path="shop/parking" element={<ParkingShop />} />
           <Route path="shop/pharmacy" element={<PharmacyShop />} />
+          <Route path="business/pharmacy/:id" element={<PharmacyDetail />} />
           <Route path="shop/transportation" element={<Transportation />} />
           <Route path="business/barber/:id" element={<BarberDetail />} />
           <Route path="business/salon/:id" element={<WomensSalonPage />} />
           <Route path="business/parking/:id" element={<ParkingDetail />} />
+          <Route path="business/cosmetics/:id" element={<CosmeticsDetail />} />
           <Route path="business/cafe/:id" element={<CafeDetail />} />
           <Route path="business/hotel/:id" element={<HotelDetail />} />
           <Route path="shop/restaurant" element={<RestaurantSearch />} />
@@ -114,6 +119,7 @@ function App() {
           <Route path="checkout/pharmacy" element={<PharmacyCheckoutFlow />} />
           <Route path="checkout/hotel" element={<HotelBookingFlow />} />
           <Route path="business/:id" element={<BusinessPage />} />
+          <Route path="mock-checkout/:tx_ref" element={<MockCheckout />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="my-bookings" element={<CustomerBookings />} />

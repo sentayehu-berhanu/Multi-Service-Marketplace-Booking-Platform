@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import MapWidget from '../components/MapWidget';
 
 const CATEGORY_ICONS = {
   'Barber': '💈',
@@ -28,6 +29,8 @@ const CategoryPage = () => {
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [viewMode, setViewMode] = useState('list');
+
 
   useEffect(() => {
     const fetchCategoryBusinesses = async () => {
@@ -50,10 +53,10 @@ const CategoryPage = () => {
   const icon = CATEGORY_ICONS[categoryName] || '🏷️';
 
   return (
-    <div className="container" style={{ padding: '2rem 24px' }}>
+    <div className="container" style={{ padding: '8rem 24px 2rem 24px' }}>
       
       {/* Category Hero */}
-      <section style={{ textAlign: 'center', padding: '3rem 0 4rem 0' }}>
+      <section style={{ textAlign: 'center', padding: '1rem 0 4rem 0' }}>
         <div style={{ 
           fontSize: '4rem', 
           width: '100px', 
@@ -79,6 +82,22 @@ const CategoryPage = () => {
 
       {/* Business Grid */}
       <section style={{ paddingBottom: '4rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', background: 'var(--bg-card)', padding: '5px', borderRadius: '10px', border: '1px solid var(--glass-border)' }}>
+            <button 
+              onClick={() => setViewMode('list')} 
+              style={{ padding: '8px 16px', border: 'none', background: viewMode === 'list' ? 'var(--primary)' : 'transparent', color: viewMode === 'list' ? 'white' : 'var(--text-secondary)', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              List View
+            </button>
+            <button 
+              onClick={() => setViewMode('map')} 
+              style={{ padding: '8px 16px', border: 'none', background: viewMode === 'map' ? 'var(--primary)' : 'transparent', color: viewMode === 'map' ? 'white' : 'var(--text-secondary)', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              Map View
+            </button>
+          </div>
+        </div>
         {loading ? (
           <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>
             Loading {categoryName.toLowerCase()}s...
@@ -95,18 +114,20 @@ const CategoryPage = () => {
             </p>
             <Link to="/" className="btn-secondary">Explore other categories</Link>
           </div>
+        ) : viewMode === 'map' ? (
+          <MapWidget businesses={businesses} height="600px" />
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
             {businesses.map(biz => (
-              <Link to={categoryName === "Women's Salon" ? `/business/salon/${biz.id}` : categoryName === "Barber" ? `/business/barber/${biz.id}` : categoryName === "Parking" ? `/business/parking/${biz.id}` : categoryName === "Café" ? `/business/cafe/${biz.id}` : `/business/${biz.id}`} key={biz.id} className="hover-scale">
+              <Link to={categoryName === "Women's Salon" ? `/business/salon/${biz.id}` : categoryName === "Barber" ? `/business/barber/${biz.id}` : categoryName === "Parking" ? `/business/parking/${biz.id}` : categoryName === "Café" ? `/business/cafe/${biz.id}` : categoryName === "Cosmetics" ? `/business/cosmetics/${biz.id}` : `/business/${biz.id}`} key={biz.id} className="hover-scale">
                 <div className="glass-panel" style={{ overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ 
                     height: '220px', 
-                    background: biz.cover_image ? `url(${biz.cover_image}) center/cover no-repeat` : 'var(--bg-secondary)',
+                    background: biz.cover_image ? `url(${biz.cover_image}) center/cover no-repeat` : 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)',
                     borderBottom: '1px solid rgba(255,255,255,0.05)'
                   }}>
                     {!biz.cover_image && (
-                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '3rem', opacity: 0.2 }}>
+                      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '5rem', opacity: 0.8 }}>
                         {icon}
                       </div>
                     )}

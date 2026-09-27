@@ -22,7 +22,7 @@ const HotelBookingFlow = () => {
   const [paymentMethod, setPaymentMethod] = useState('telebirr');
 
   if (!state) {
-    return <Navigate to="/category/Hotel" />;
+    return <Navigate to="/shop/hotel" />;
   }
 
   const { hotelId, hotelName, room, checkIn, checkOut, guests } = state;

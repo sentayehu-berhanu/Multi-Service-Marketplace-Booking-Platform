@@ -107,20 +107,23 @@ exports.createBooking = async (req, res) => {
     const requestedStart = new Date(start_time);
     const requestedEnd = new Date(requestedStart.getTime() + service.duration * 60000);
 
-    // Concurrency check: Ensure slot is still free
-    const overlaps = await prisma.booking.findFirst({
-      where: {
-        business_id: parseInt(business_id),
-        status: { in: ['PENDING', 'CONFIRMED'] },
-        AND: [
-          { start_time: { lt: requestedEnd } },
-          { end_time: { gt: requestedStart } }
-        ]
-      }
-    });
+    // Concurrency check: Only check if a specific staff member is requested
+    if (staff_id) {
+      const overlaps = await prisma.booking.findFirst({
+        where: {
+          business_id: parseInt(business_id),
+          staff_id: parseInt(staff_id),
+          status: { in: ['PENDING', 'CONFIRMED'] },
+          AND: [
+            { start_time: { lt: requestedEnd } },
+            { end_time: { gt: requestedStart } }
+          ]
+        }
+      });
 
-    if (overlaps) {
-      return res.status(409).json({ error: 'This time slot is no longer available.' });
+      if (overlaps) {
+        return res.status(409).json({ error: 'This time slot is no longer available.' });
+      }
     }
 
     // Create booking

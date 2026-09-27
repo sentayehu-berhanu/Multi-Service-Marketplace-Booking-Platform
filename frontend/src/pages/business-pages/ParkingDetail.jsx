@@ -18,10 +18,18 @@ const ParkingDetail = () => {
   const pricePerHour = 100;
   const total = duration * pricePerHour;
 
-  const handleReserve = () => {
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('telebirr');
+
+  const handleReserve = async () => {
     if (!selectedSpace) return alert('Please select a parking space.');
     if (!vehicle) return alert('Please enter your vehicle details.');
     
+    setIsProcessing(true);
+    // Simulate payment processing delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsProcessing(false);
+
     // Pass data to confirmation via state
     navigate('/booking/parking/success', {
       state: {
@@ -29,132 +37,191 @@ const ParkingDetail = () => {
         duration: duration,
         vehicle: vehicle,
         total: total,
-        parkingName: 'Safe Parking'
+        parkingName: 'Safe Parking',
+        paymentMethod: paymentMethod
       }
     });
   };
 
+  const business = {
+    name: 'Safe Parking',
+    rating: 4.8,
+    reviews: 120,
+    distance: '1.2 km',
+    location: 'Bole, Addis Ababa',
+    gallery: [
+      'https://images.unsplash.com/photo-1573348722427-f1d6819fdf98?ixlib=rb-4.0.3&w=400&q=80',
+      'https://images.unsplash.com/photo-1590674899484-d5640e854abe?ixlib=rb-4.0.3&w=400&q=80',
+      'https://images.unsplash.com/photo-1543881477-8326e5fc5775?ixlib=rb-4.0.3&w=400&q=80'
+    ]
+  };
+
+  const [activeTab, setActiveTab] = useState('Map');
+  const TABS = ['Overview', 'Map', 'Reviews', 'Gallery'];
+
   return (
-    <div style={{ background: '#f8fafc', minHeight: '100vh', color: '#1e293b' }}>
+    <div style={{ background: '#f4f7fb', minHeight: '100vh', fontFamily: "'Inter', sans-serif", padding: '2rem' }}>
       
-      {/* Header */}
-      <div style={{ background: '#0f172a', padding: '3rem 24px', color: 'white' }}>
-        <div className="container" style={{ maxWidth: '900px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div>
-            <span style={{ textTransform: 'uppercase', color: '#94a3b8', fontSize: '0.9rem', fontWeight: 'bold', letterSpacing: '2px' }}>Parking Detail</span>
-            <h1 style={{ fontSize: '3rem', margin: '0.5rem 0' }}>SAFE PARKING</h1>
-            <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-              <span style={{ fontSize: '1.2rem' }}>📍 Addis Ababa, Bole</span>
-              <span style={{ background: '#166534', color: '#4ade80', padding: '5px 12px', borderRadius: '20px', fontWeight: 'bold' }}>🟢 43 Available</span>
-            </div>
-          </div>
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#38bdf8' }}>{pricePerHour} ETB<span style={{ fontSize: '1rem', color: '#94a3b8' }}>/hr</span></div>
-          </div>
-        </div>
+      {/* Top Header */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '15px' }}>
+        <div style={{ fontSize: '2rem', color: '#3b82f6' }}>🅿️</div>
+        <h1 style={{ fontSize: '1.2rem', color: '#0f172a', margin: 0, fontWeight: '800', letterSpacing: '0.5px' }}>RESERVATION - PARKING</h1>
       </div>
 
-      <div className="container" style={{ padding: '3rem 24px', maxWidth: '900px', margin: '0 auto', display: 'flex', gap: '3rem' }}>
+      {/* Main Container Card */}
+      <div style={{ maxWidth: '1200px', margin: '0 auto', background: 'white', borderRadius: '20px', padding: '2rem', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
         
-        {/* Left Col: Map */}
-        <div style={{ flex: '1 1 60%' }}>
-          <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Parking Map</h2>
+        {/* Business Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
+          <div>
+            <h2 style={{ fontSize: '1.8rem', margin: '0 0 10px 0', color: '#0f172a' }}>{business.name}</h2>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', color: '#64748b' }}>
+              <span style={{ color: '#f59e0b', fontWeight: 'bold' }}>⭐ {business.rating}</span>
+              <span>({business.reviews} reviews)</span>
+              <span>•</span>
+              <span style={{ color: '#059669', fontWeight: 'bold' }}>Open Now</span>
+              <span>•</span>
+              <span>📍 {business.distance} - {business.location}</span>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: '15px' }}>
+            <button style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>♡</button>
+            <button style={{ background: 'none', border: 'none', fontSize: '1.2rem', cursor: 'pointer', color: '#64748b' }}>📤</button>
+          </div>
+        </div>
+
+        {/* Content Layout */}
+        <div style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
           
-          <div style={{ 
-            background: '#e2e8f0', padding: '2rem', borderRadius: '15px', 
-            display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px'
-          }}>
-            {SPACES.map(space => (
-              <div 
-                key={space.id}
-                onClick={() => space.status === 'available' && setSelectedSpace(space.id)}
-                style={{
-                  background: space.status === 'occupied' ? '#cbd5e1' : selectedSpace === space.id ? '#3b82f6' : 'white',
-                  color: space.status === 'occupied' ? '#94a3b8' : selectedSpace === space.id ? 'white' : '#334155',
-                  padding: '2rem 1rem',
-                  borderRadius: '10px',
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                  fontSize: '1.2rem',
-                  cursor: space.status === 'available' ? 'pointer' : 'not-allowed',
-                  boxShadow: space.status === 'available' ? '0 4px 6px -1px rgba(0,0,0,0.1)' : 'none',
-                  border: selectedSpace === space.id ? '2px solid #2563eb' : '2px solid transparent',
-                  transition: 'all 0.2s'
-                }}
-              >
-                {space.id}
-                <div style={{ fontSize: '0.8rem', marginTop: '5px', fontWeight: 'normal' }}>
-                  {space.status === 'occupied' ? '🔴 Taken' : '🟢 Open'}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '1.5rem', color: '#64748b' }}>
-            <span><span style={{ color: '#22c55e' }}>🟢</span> Available</span>
-            <span><span style={{ color: '#ef4444' }}>🔴</span> Occupied</span>
-            <span><span style={{ color: '#3b82f6' }}>🔵</span> Selected</span>
-          </div>
-        </div>
-
-        {/* Right Col: Booking Form */}
-        <div style={{ flex: '1 1 40%' }}>
-          <div style={{ background: 'white', padding: '2rem', borderRadius: '15px', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', position: 'sticky', top: '20px' }}>
-            <h2 style={{ fontSize: '1.8rem', marginBottom: '2rem' }}>Reservation</h2>
+          {/* Left Column */}
+          <div style={{ flex: '1 1 600px' }}>
             
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontWeight: 'bold', color: '#64748b', marginBottom: '5px' }}>Selected Space</label>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: selectedSpace ? '#0f172a' : '#cbd5e1' }}>
-                {selectedSpace || 'None selected'}
-              </div>
+            {/* Gallery */}
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '1.5rem' }}>
+              <div style={{ flex: 1, height: '150px', background: `url(${business.gallery[0]}) center/cover`, borderRadius: '12px' }}></div>
+              <div style={{ flex: 1, height: '150px', background: `url(${business.gallery[1]}) center/cover`, borderRadius: '12px' }}></div>
+              <div style={{ flex: 1, height: '150px', background: `url(${business.gallery[2]}) center/cover`, borderRadius: '12px' }}></div>
             </div>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontWeight: 'bold', color: '#64748b', marginBottom: '5px' }}>Vehicle (Plate / Model)</label>
-              <input 
-                type="text" 
-                placeholder="e.g. 🚗 Toyota Corolla"
-                value={vehicle}
-                onChange={(e) => setVehicle(e.target.value)}
-                style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem', outline: 'none' }}
-              />
-            </div>
-
-            <div style={{ marginBottom: '2rem' }}>
-              <label style={{ display: 'block', fontWeight: 'bold', color: '#64748b', marginBottom: '5px' }}>Duration</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+            {/* Tabs */}
+            <div style={{ display: 'flex', gap: '2rem', borderBottom: '1px solid #e2e8f0', marginBottom: '2rem' }}>
+              {TABS.map(tab => (
                 <button 
-                  onClick={() => setDuration(Math.max(1, duration - 1))}
-                  style={{ width: '40px', height: '40px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', fontSize: '1.5rem', cursor: 'pointer' }}
-                >-</button>
-                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', minWidth: '80px', textAlign: 'center' }}>
-                  {duration} {duration === 1 ? 'Hour' : 'Hours'}
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  style={{ 
+                    background: 'none', border: 'none', padding: '10px 0', 
+                    fontSize: '1rem', fontWeight: 'bold', cursor: 'pointer',
+                    color: activeTab === tab ? '#3b82f6' : '#64748b',
+                    borderBottom: activeTab === tab ? '3px solid #3b82f6' : '3px solid transparent',
+                    marginBottom: '-1px'
+                  }}
+                >{tab}</button>
+              ))}
+            </div>
+
+            {/* Tab Content */}
+            {activeTab === 'Map' && (
+              <div>
+                <h3 style={{ fontSize: '1.2rem', color: '#0f172a', marginBottom: '1.5rem', fontWeight: 'bold' }}>Parking Map</h3>
+                
+                <div style={{ 
+                  background: '#f8fafc', padding: '2rem', borderRadius: '15px', 
+                  display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px', border: '1px solid #e2e8f0'
+                }}>
+                  {SPACES.map(space => (
+                    <div 
+                      key={space.id}
+                      onClick={() => space.status === 'available' && setSelectedSpace(space.id)}
+                      style={{
+                        background: space.status === 'occupied' ? '#e2e8f0' : selectedSpace === space.id ? '#eff6ff' : 'white',
+                        color: space.status === 'occupied' ? '#94a3b8' : selectedSpace === space.id ? '#3b82f6' : '#334155',
+                        padding: '1.5rem 1rem',
+                        borderRadius: '10px',
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        fontSize: '1.2rem',
+                        cursor: space.status === 'available' ? 'pointer' : 'not-allowed',
+                        border: selectedSpace === space.id ? '2px solid #3b82f6' : '2px solid #e2e8f0',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      {space.id}
+                      <div style={{ fontSize: '0.8rem', marginTop: '5px', fontWeight: 'normal', color: space.status === 'occupied' ? '#94a3b8' : '#64748b' }}>
+                        {space.status === 'occupied' ? '🔴 Taken' : '🟢 Open'}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <button 
-                  onClick={() => setDuration(duration + 1)}
-                  style={{ width: '40px', height: '40px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', fontSize: '1.5rem', cursor: 'pointer' }}
-                >+</button>
+
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '1.5rem', color: '#64748b', fontSize: '0.9rem' }}>
+                  <span><span style={{ color: '#22c55e' }}>🟢</span> Available</span>
+                  <span><span style={{ color: '#ef4444' }}>🔴</span> Occupied</span>
+                  <span><span style={{ color: '#3b82f6' }}>🔵</span> Selected</span>
+                </div>
+              </div>
+            )}
+            {activeTab !== 'Map' && <div style={{ color: '#64748b' }}>{activeTab} content...</div>}
+          </div>
+
+          {/* Right Column (Widget) */}
+          <div style={{ flex: '1 1 350px' }}>
+            <div style={{ background: '#f8fafc', borderRadius: '15px', padding: '2rem', border: '1px solid #e2e8f0' }}>
+              <h3 style={{ fontSize: '1.2rem', color: '#0f172a', marginBottom: '1.5rem', fontWeight: 'bold' }}>Reservation</h3>
+              
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Selected Space</label>
+                <div style={{ padding: '12px', background: 'white', border: '1px solid #cbd5e1', borderRadius: '8px', fontWeight: 'bold', color: selectedSpace ? '#0f172a' : '#94a3b8' }}>
+                  {selectedSpace || 'None selected'}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Vehicle (Plate / Model)</label>
+                <input type="text" placeholder="e.g. 🚗 Toyota Corolla" value={vehicle} onChange={e => setVehicle(e.target.value)} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', outline: 'none', fontWeight: '500', color: '#0f172a' }} />
+              </div>
+
+              <div style={{ marginBottom: '1.5rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '5px', fontWeight: '500' }}>Duration</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                  <button onClick={() => setDuration(Math.max(1, duration - 1))} style={{ width: '40px', height: '40px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', fontSize: '1.5rem', cursor: 'pointer' }}>-</button>
+                  <div style={{ fontSize: '1rem', fontWeight: 'bold', minWidth: '80px', textAlign: 'center', color: '#0f172a' }}>{duration} Hours</div>
+                  <button onClick={() => setDuration(duration + 1)} style={{ width: '40px', height: '40px', borderRadius: '8px', border: '1px solid #cbd5e1', background: 'white', fontSize: '1.5rem', cursor: 'pointer' }}>+</button>
+                </div>
+              </div>
+
+              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1.5rem', marginBottom: '1.5rem' }}>
+                <label style={{ display: 'block', fontSize: '0.9rem', color: '#475569', marginBottom: '10px', fontWeight: '500' }}>Payment Method</label>
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
+                  <button onClick={() => setPaymentMethod('telebirr')} style={{ flex: 1, padding: '10px', border: paymentMethod === 'telebirr' ? '2px solid #00c2cb' : '1px solid #cbd5e1', background: paymentMethod === 'telebirr' ? '#f0fdfa' : 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', color: paymentMethod === 'telebirr' ? '#00c2cb' : '#64748b' }}>Telebirr</button>
+                  <button onClick={() => setPaymentMethod('card')} style={{ flex: 1, padding: '10px', border: paymentMethod === 'card' ? '2px solid #3b82f6' : '1px solid #cbd5e1', background: paymentMethod === 'card' ? '#eff6ff' : 'white', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', color: paymentMethod === 'card' ? '#3b82f6' : '#64748b' }}>Bank Card</button>
+                </div>
+
+                {paymentMethod === 'telebirr' && (
+                  <input type="text" placeholder="09XX XXX XXX" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem', outline: 'none', background: 'white' }} />
+                )}
+                {paymentMethod === 'card' && (
+                  <input type="text" placeholder="Card Number" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '1rem', outline: 'none', background: 'white' }} />
+                )}
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', paddingTop: '10px', borderTop: '1px solid #e2e8f0' }}>
+                <span style={{ fontSize: '1.1rem', color: '#475569', fontWeight: '500' }}>Total to Pay</span>
+                <span style={{ fontSize: '1.3rem', color: '#0f172a', fontWeight: 'bold' }}>{total} ETB</span>
+              </div>
+
+              <button onClick={handleReserve} disabled={isProcessing} style={{ width: '100%', padding: '14px', background: isProcessing ? '#94a3b8' : '#3b82f6', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', fontSize: '1.1rem', cursor: isProcessing ? 'not-allowed' : 'pointer', marginBottom: '1.5rem', boxShadow: isProcessing ? 'none' : '0 4px 6px -1px rgba(59, 130, 246, 0.4)' }}>
+                {isProcessing ? 'PROCESSING...' : `PAY & RESERVE`}
+              </button>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginTop: '10px' }}>
+                <span style={{ color: '#475569' }}>Contact</span>
+                <span style={{ color: '#0f172a', fontWeight: '500' }}>+251 91 111 2233</span>
               </div>
             </div>
-
-            <div style={{ borderTop: '2px dashed #cbd5e1', paddingTop: '1.5rem', marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#64748b' }}>Total:</span>
-              <span style={{ fontSize: '2rem', fontWeight: 'bold', color: '#0f172a' }}>{total} ETB</span>
-            </div>
-
-            <button 
-              onClick={handleReserve}
-              style={{ 
-                width: '100%', padding: '16px', background: '#3b82f6', color: 'white', 
-                border: 'none', borderRadius: '8px', fontSize: '1.2rem', fontWeight: 'bold', cursor: 'pointer',
-                boxShadow: '0 4px 6px -1px rgba(59, 130, 246, 0.5)'
-              }}
-            >
-              RESERVE NOW
-            </button>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
   );
